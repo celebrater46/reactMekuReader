@@ -24,7 +24,7 @@ const Ajax = () => {
     // this useEffect will run once
     // similar to componentDidMount()
     useEffect(() => {
-        fetch(server +"index.php?novel=0")
+        fetch(server +"index.php?novel=0&ep=1")
             .then(res => res.json())
             .then(
                 (result) => {
