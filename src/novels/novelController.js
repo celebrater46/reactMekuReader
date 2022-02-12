@@ -13,12 +13,13 @@ const convertBr = (texts) => {
     // 改行タグで本文を行ごとの配列に分割
     // const unified = texts.replace(["、", "\n", "\r", "<br>", "<br/>", "<br />", `<br />`, `<br/>`, "&lt;br/&gt;", "&lt;br /&gt;"], "．"); // <- not working
     // const unified = texts.replace("、", "．");
-    let unified = texts.replace(/<br>/g, "．");
-    unified = unified.replace(/<br\/>/g, "．");
-    unified = unified.replace(/<br \/>/g, "．");
+    let unified = texts.replace(/<br>/g, "‖");
+    unified = unified.replace(/<br\/>/g, "‖");
+    unified = unified.replace(/<br \/>/g, "‖");
+    unified = unified.replace(/\n/g, "‖");
     // const unified = texts.replace("<br />", "<br>");
     // const separated = unified.split("<br>");
-    const separated = unified.split("．");
+    const separated = unified.split("‖");
     console.log(texts);
     let array = [];
     separated.map((line) => {
