@@ -15,9 +15,6 @@ export const NoAjax = () => {
             );
         }
     } else {
-        // let fruitAll = fruit.concat(['Peach', 'Grapes']);
-        // text = text.replace("<br />", "\n");
-        // array[0] = text;
         array = array.concat(text);
     }
 

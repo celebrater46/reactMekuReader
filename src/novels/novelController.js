@@ -9,23 +9,14 @@ import {shiroganekiList} from "./shiroganeki/list";
 import {shiroganekiChapters} from "./shiroganeki/chapters";
 import {shiroganekiTexts} from "./shiroganeki/texts";
 
+// 改行タグで本文を行ごとの配列に分割
 const convertBr = (texts) => {
-    // 改行タグで本文を行ごとの配列に分割
-    // const unified = texts.replace(["、", "\n", "\r", "<br>", "<br/>", "<br />", `<br />`, `<br/>`, "&lt;br/&gt;", "&lt;br /&gt;"], "．"); // <- not working
-    // const unified = texts.replace("、", "．");
-    let unified = texts.replace(/<br>/g, "‖");
-    unified = unified.replace(/<br\/>/g, "‖");
-    unified = unified.replace(/<br \/>/g, "‖");
-    unified = unified.replace(/\n/g, "‖");
-    // const unified = texts.replace("<br />", "<br>");
-    // const separated = unified.split("<br>");
-    const separated = unified.split("‖");
+    const escaped = texts.replace(/\n/g, "‖");
+    const separated = escaped.split("‖");
     console.log(texts);
     let array = [];
     separated.map((line) => {
-        // array.push("<p>" + line + "</p>"); // タグがそのまま出ちゃう。JSX の記法で
         array.push(<p>{ line }</p>);
-        // return (<p>{ line }</p>);
     });
     return array;
 }
