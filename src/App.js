@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Ajax from "./components/Ajax";
+import {NoAjax} from "./components/NoAjax";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         >
           Learn React
         </a>
-        <Ajax />
+        <NoAjax />
       </header>
     </div>
   );
