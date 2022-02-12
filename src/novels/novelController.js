@@ -20,13 +20,13 @@ const convertBr = (texts) => {
     // const separated = unified.split("<br>");
     const separated = unified.split("．");
     console.log(texts);
-    // let array = [];
+    let array = [];
     separated.map((line) => {
         // array.push("<p>" + line + "</p>"); // タグがそのまま出ちゃう。JSX の記法で
-        // array.push(<p>{ line }</p>);
-        return (<p>{ line }</p>);
+        array.push(<p>{ line }</p>);
+        // return (<p>{ line }</p>);
     });
-    // return array;
+    return array;
 }
 
 export const getNovels = (novel, ep) => {
