@@ -26,7 +26,7 @@ export const HiddenButton = (props) => {
             default: msg += "unknown"; break;
             // default: msg += "unknown";
         }
-        // console.log(msg);
+        console.log(msg);
     }
     // console.log(style);
     // console.log(props.right);
