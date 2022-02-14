@@ -1,4 +1,5 @@
 import React from "react";
+import "../static/ControlPanel.css"
 
 export const ControlPanel = () => {
     const style = {
@@ -35,7 +36,7 @@ export const ControlPanel = () => {
     return (
         <div style={style}>
             コントロールパネル
-            <div style={panelStyle}>
+            <div className={"novel controller"} style={panelStyle}>
                 <div style={boxStyle}>
                     <label htmlFor="font_family" style={labelStyle}>文字の種類</label>
                     <select name="font_family" style={selectStyle}>
