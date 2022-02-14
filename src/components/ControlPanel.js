@@ -11,55 +11,64 @@ export const ControlPanel = () => {
         color: "black",
         position: "fixed"
     }
+    const panelStyle = {
+        display: "flex",
+    }
+    const boxStyle = {
+        width: "40%",
+        height: "40%",
+        textAlign: "left",
+        padding: "10% auto auto 10%",
+    }
+    const labelStyle = {
+        fontSize: "1.3rem",
+        margin: "10px 20px 10px 40px"
+    }
+    const selectStyle = {
+        fontSize: "1.2rem"
+    }
 
     return (
         <div style={style}>
             コントロールパネル
-            <div className='novel controller'>
-                    <div className="font family label">
-                        <label htmlFor="font_family">文字の種類</label>
-                    </div>
-                    <div className="font family select">
-                        <select name="font_family">
-                            <option value="gothic" selected>ゴシック</option>
-                            <option value="mincho">明朝</option>
-                        </select>
-                    </div>
-                    <div className="font size label">
-                        <label htmlFor="font_size">文字の大きさ</label>
-                    </div>
-                    <div className="font size select">
-                        <select name="font_size">
-                            <option>極小</option>
-                            <option>特小</option>
-                            <option>小</option>
-                            <option>やや小</option>
-                            <option selected>中</option>
-                            <option>やや大</option>
-                            <option>大</option>
-                            <option>特大</option>
-                            <option>極大</option>
-                        </select>
-                    </div>
-                    <div className="color label">
-                        <label htmlFor="color">背景色</label>
-                    </div>
-                    <div className="color select">
-                        <select name="color">
-                            <option>白</option>
-                            <option>黒</option>
-                            <option>ベージュ</option>
-                        </select>
-                    </div>
-                    <div className="xy label">
-                        <label htmlFor="xy">組み方向</label>
-                    </div>
-                    <div className="xy select">
-                        <select name="xy">
-                            <option selected>横書き</option>
-                            <option>縦書き</option>
-                        </select>
-                    </div>
+            <div style={panelStyle}>
+                <div style={boxStyle}>
+                    <label htmlFor="font_family" style={labelStyle}>文字の種類</label>
+                    <select name="font_family" style={selectStyle}>
+                        <option value="gothic" selected>ゴシック</option>
+                        <option value="mincho">明朝</option>
+                    </select>
+                </div>
+
+                <div style={boxStyle}>
+                    <label htmlFor="font_size" style={labelStyle}>文字の大きさ</label>
+                    <select name="font_size" style={selectStyle}>
+                        <option>小</option>
+                        <option selected>中</option>
+                        <option>大</option>
+                        <option>特大</option>
+                    </select>
+                </div>
+
+                <div className="color label">
+                    <label htmlFor="color">背景色</label>
+                </div>
+                <div className="color select">
+                    <select name="color">
+                        <option>白</option>
+                        <option>黒</option>
+                        <option>ベージュ</option>
+                    </select>
+                </div>
+                <div className="xy label">
+                    <label htmlFor="xy">組み方向</label>
+                </div>
+                <div className="xy select">
+                    <select name="xy">
+                        <option selected>横書き</option>
+                        <option>縦書き</option>
+                    </select>
+                </div>
             </div>
         </div>
     );
