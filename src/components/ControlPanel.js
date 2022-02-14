@@ -2,25 +2,29 @@ import React from "react";
 
 export const ControlPanel = () => {
     const style = {
-        width: "70vw",
-        height: "70vh",
-        top: "15vh",
-        right: "15vw",
+        width: "50vw",
+        height: "50vh",
+        top: "25vh",
+        right: "25vw",
         opacity: 0.8,
         backgroundColor: "silver",
         color: "black",
         position: "fixed"
     }
     const panelStyle = {
-        display: "flex",
+        display: "block",
+        flexWrap: "wrap",
     }
     const boxStyle = {
-        width: "40%",
+        width: "80%",
         height: "40%",
         textAlign: "left",
-        padding: "10% auto auto 10%",
+        padding: "0",
+        margin: "5% auto 5% 20%"
     }
     const labelStyle = {
+        display: "inline-block",
+        width: "25%",
         fontSize: "1.3rem",
         margin: "10px 20px 10px 40px"
     }
@@ -50,21 +54,18 @@ export const ControlPanel = () => {
                     </select>
                 </div>
 
-                <div className="color label">
-                    <label htmlFor="color">背景色</label>
-                </div>
-                <div className="color select">
-                    <select name="color">
+                <div style={boxStyle}>
+                    <label htmlFor="color" style={labelStyle}>背景色</label>
+                    <select name="color" style={selectStyle}>
                         <option>白</option>
                         <option>黒</option>
                         <option>ベージュ</option>
                     </select>
                 </div>
-                <div className="xy label">
-                    <label htmlFor="xy">組み方向</label>
-                </div>
-                <div className="xy select">
-                    <select name="xy">
+
+                <div style={boxStyle}>
+                    <label htmlFor="xy" style={labelStyle}>組み方向</label>
+                    <select name="xy" style={selectStyle}>
                         <option selected>横書き</option>
                         <option>縦書き</option>
                     </select>
