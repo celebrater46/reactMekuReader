@@ -1,13 +1,40 @@
-import React from "react";
+import React, {useMemo} from "react";
 
-export const Pages = () => {
+export const Pages = (props) => {
+    const fColor = props.fColor;
+    const bgColor = props.bgColor;
+    // const fColor = useMemo(() => {
+    //     switch (props.color){
+    //         case "white": return "#333";
+    //         case "black": return "silver";
+    //         case "beige": return "#443322";
+    //         default: return "#333";
+    //     }
+    // }, [props.color]);
+    // const bgColor = useMemo(() => {
+    //     switch (props.color){
+    //         case "white": return "white";
+    //         case "black": return "black";
+    //         case "beige": return "#fedcbb";
+    //         default: return "white";
+    //     }
+    // }, [props.color]);
     const style = {
-        color: "silver",
-        backgroundColor: "#333",
+        color: fColor,
+        backgroundColor: bgColor,
         textAlign: "justify",
         margin: "20px",
         padding: "40px"
     };
+    // const style = useMemo(() => {
+    //     return {
+    //         color: fColor,
+    //         backgroundColor: bgColor,
+    //         textAlign: "justify",
+    //         margin: "20px",
+    //         padding: "40px"
+    //     }
+    // }, [props.fColor]);
     const createTestPages = () => {
         let pages = [];
 

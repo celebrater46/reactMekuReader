@@ -8,6 +8,41 @@ export const Container = () => {
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
     const [xy, setXy] = useState("x");
+    const fontSizeNum = useMemo(() => {
+        switch (size){
+            case "small": return "14px";
+            case "middle": return "18px";
+            case "large": return "20px";
+            case "largest": return "24px";
+            default: return "16px";
+        }
+    }, [size]);
+    const fColor = useMemo(() => {
+        switch (color){
+            case "white": return "#333";
+            case "black": return "silver";
+            case "beige": return "#443322";
+            default: return "#333";
+        }
+    }, [color]);
+    const bgColor = useMemo(() => {
+        switch (color){
+            case "white": return "white";
+            case "black": return "#333";
+            case "beige": return "#fedcbb";
+            default: return "white";
+        }
+    }, [color]);
+    // const colors = useMemo(() =>{
+    //     console.log("colors is working");
+    //     // backgroundColor, fontColor
+    //     switch (color){
+    //         case "white": return { backGround: "white", font: "#333" };
+    //         case "black": return { backGround: "black", font: "silver" };
+    //         case "beige": return { backGround: "#fedcbb", font: "#443322" };
+    //         default: return { backGround: "white", font: "#333" };
+    //     }
+    // }, [color]);
     // const [fontName, setFontName] = useState('Kosugi');
     const changeFamily = (e) => {
         setFamily(e.target.value);
@@ -22,12 +57,13 @@ export const Container = () => {
         setXy(e.target.value);
     }
     const div = {
-        backgroundColor: "silver",
-        color: "black",
+        backgroundColor: "black",
+        color: "silver",
         width: "90%",
         height: "90%",
         margin: "5%",
         fontFamily: family,
+        fontSize: fontSizeNum,
     }
     const p = {
         color: "black"
@@ -54,7 +90,7 @@ export const Container = () => {
             {/*<HiddenButton type={"right"} width={"48vw"} height={"60vh"} right={"2vw"} top={"20vh"} />*/}
             {/*<HiddenButton type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             {/*<HiddenButton type={"left"} width={"48vw"} height={"60vh"} left={"2vw"} top={"20vh"}/>*/}
-            <Pages />
+            <Pages fColor={fColor} bgColor={bgColor}/>
             <ControlPanel
                 family={family}
                 size={size}
