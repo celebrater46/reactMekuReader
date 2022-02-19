@@ -5,6 +5,9 @@ export const Pages = (props) => {
     const fColor = props.fColor;
     const bgColor = props.bgColor;
     const xy = props.xy;
+    const innerMargin = useMemo(() => {
+        return xy === "horizontal-tb" ? "0 auto 0 0" : "0 0 0 auto";
+    }, [xy]);
     // const fColor = useMemo(() => {
     //     switch (props.color){
     //         case "white": return "#333";
@@ -31,7 +34,8 @@ export const Pages = (props) => {
     const innerStyle = {
         color: fColor,
         textAlign: "justify",
-        writingMode: xy
+        writingMode: xy,
+        margin: innerMargin,
     };
     // const style = useMemo(() => {
     //     return {
