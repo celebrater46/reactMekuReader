@@ -2,12 +2,14 @@ import React, {useMemo, useState} from "react";
 import {HiddenButton} from "./HiddenButton";
 import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
+import {MovePageButton} from "./MovePageButton";
 
 export const Container = () => {
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
     const [xy, setXy] = useState("horizontal-tb");
+    const [pageNum, setPageNum] = useState(1);
 
     const fontSizeNum = useMemo(() => {
         switch (size){
@@ -36,6 +38,23 @@ export const Container = () => {
             default: return "white";
         }
     }, [color]);
+
+    const direction = useMemo(() => {
+        return xy === "horizontal-tb" ? "row" : "row-reverse";
+        // if(xy === "horizontal-tb"){
+        //     return "row";
+        // } else {
+        //     return "row-reverse";
+        // }
+    }, [xy]);
+
+    const left = useMemo(() => {
+        return xy === "horizontal-tb" ? "0" : "auto";
+    }, [xy]);
+
+    const right = useMemo(() => {
+        return xy === "horizontal-tb" ? "auto" : "0";
+    }, [xy]);
     // const colors = useMemo(() =>{
     //     console.log("colors is working");
     //     // backgroundColor, fontColor
@@ -73,12 +92,13 @@ export const Container = () => {
         fontFamily: family,
         fontSize: fontSizeNum,
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
+        flexDirection: direction,
+        justifyContent: "flex-start",
         alignItems: "flex-start",
         flexWrap: "nowrap",
         position: "absolute",
-        left: "0"
+        left: left,
+        right: right,
     }
 
     const p = { color: "black" }
@@ -100,10 +120,11 @@ export const Container = () => {
     return(
         <div style={div}>
             <p style={p}>{parameter}</p>
-            {/*<HiddenButton type={"top"} width={"96vw"} height={"18vh"} right={"2vw"} top={"2vh"}/>*/}
-            {/*<HiddenButton type={"right"} width={"48vw"} height={"60vh"} right={"2vw"} top={"20vh"} />*/}
-            {/*<HiddenButton type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
-            {/*<HiddenButton type={"left"} width={"48vw"} height={"60vh"} left={"2vw"} top={"20vh"}/>*/}
+            {/*<HiddenButton xy={xy} type={"top"} width={"96vw"} height={"18vh"} right={"2vw"} top={"2vh"}/>*/}
+            {/*<HiddenButton xy={xy} type={"right"} width={"48vw"} height={"60vh"} right={"2vw"} top={"20vh"} />*/}
+            <MovePageButton xy={xy} />
+            {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
+            {/*<HiddenButton xy={xy} type={"left"} width={"48vw"} height={"60vh"} left={"2vw"} top={"20vh"}/>*/}
             <Pages fColor={fColor} bgColor={bgColor} xy={xy}/>
             <ControlPanel
                 family={family}

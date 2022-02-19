@@ -106,7 +106,7 @@ export const ControlPanel = (props) => {
                     </select>
                 </div>
 
-                <button>適用</button>
+                <button>閉じる</button>
             </div>
         </div>
     );
