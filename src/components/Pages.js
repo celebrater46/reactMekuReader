@@ -1,6 +1,7 @@
 import React, {useMemo} from "react";
 
 export const Pages = (props) => {
+    // const margin = "20px " + (window.innerWidth - 700) / 2;
     const fColor = props.fColor;
     const bgColor = props.bgColor;
     const xy = props.xy;
@@ -20,12 +21,16 @@ export const Pages = (props) => {
     //         default: return "white";
     //     }
     // }, [props.color]);
-    const style = {
-        color: fColor,
+    const outerStyle = {
         backgroundColor: bgColor,
+        margin: "20px " + ((window.innerWidth - 700) / 2) + "px",
+        padding: "50px",
+        width: "700px",
+        height: "70vh",
+    }
+    const innerStyle = {
+        color: fColor,
         textAlign: "justify",
-        margin: "20px",
-        padding: "40px",
         writingMode: xy
     };
     // const style = useMemo(() => {
@@ -42,12 +47,14 @@ export const Pages = (props) => {
 
         for(let i = 0; i < 5; i++){
             pages.push(
-                <div key={i} id={"p-" + i} style={style}>
-                    <p>これはテストやで！</p>
-                    <p>これはテストやで！</p>
-                    <p>これはテストやで！</p>
-                    <p>これはテストやで！</p>
-                    <p>これはテストやで！</p>
+                <div key={"outer-" + i} style={outerStyle}>
+                    <div key={"inner-" + i} id={"p-" + i} style={innerStyle}>
+                        <p>{i + 1}ページめ！</p>
+                        <p>これはテストやで！</p>
+                        <p>これはテストやで！</p>
+                        <p>これはテストやで！</p>
+                        <p>これはテストやで！</p>
+                    </div>
                 </div>
             );
         }

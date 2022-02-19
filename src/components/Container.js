@@ -8,6 +8,7 @@ export const Container = () => {
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
     const [xy, setXy] = useState("horizontal-tb");
+
     const fontSizeNum = useMemo(() => {
         switch (size){
             case "small": return "14px";
@@ -17,6 +18,7 @@ export const Container = () => {
             default: return "16px";
         }
     }, [size]);
+
     const fColor = useMemo(() => {
         switch (color){
             case "white": return "#333";
@@ -25,6 +27,7 @@ export const Container = () => {
             default: return "#333";
         }
     }, [color]);
+
     const bgColor = useMemo(() => {
         switch (color){
             case "white": return "white";
@@ -47,27 +50,38 @@ export const Container = () => {
     const changeFamily = (e) => {
         setFamily(e.target.value);
     }
+
     const changeSize = (e) => {
         setSize(e.target.value);
     }
+
     const changeColor = (e) => {
         setColor(e.target.value);
     }
+
     const changeXy = (e) => {
         setXy(e.target.value);
     }
+
     const div = {
         backgroundColor: "black",
         color: "silver",
-        width: "90%",
+        width: "501vw",
         height: "90%",
-        margin: "5%",
+        margin: "0",
+        padding: "5% 0",
         fontFamily: family,
         fontSize: fontSizeNum,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "flex-start",
+        flexWrap: "nowrap",
+        position: "absolute",
+        left: "0"
     }
-    const p = {
-        color: "black"
-    }
+
+    const p = { color: "black" }
     const parameter = window.location.search; // ?hoge=0
     // useMemo(() => {
     //     if(family === "Noto Serif JP"){
