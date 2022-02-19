@@ -1,11 +1,11 @@
 import React, {useMemo, useState} from "react";
 import "../static/ControlPanel.css"
 
-export const ControlPanel = () => {
-    const [family, setFamily] = useState("mincho");
-    const [size, setSize] = useState("middle");
-    const [color, setColor] = useState("white");
-    const [xy, setXy] = useState("x");
+export const ControlPanel = (props) => {
+    // const [family, setFamily] = useState("mincho");
+    // const [size, setSize] = useState("middle");
+    // const [color, setColor] = useState("white");
+    // const [xy, setXy] = useState("x");
     const style = {
         width: "50vw",
         height: "50vh",
@@ -36,24 +36,36 @@ export const ControlPanel = () => {
     const selectStyle = {
         fontSize: "1.2rem"
     }
+    // const changeFamily = (e) => {
+    //     setFamily(e.target.value);
+    // }
+    // const changeSize = (e) => {
+    //     setSize(e.target.value);
+    // }
+    // const changeColor = (e) => {
+    //     setColor(e.target.value);
+    // }
+    // const changeXy = (e) => {
+    //     setXy(e.target.value);
+    // }
     const changeFamily = (e) => {
-        setFamily(e.target.value);
+        return props.changeFamily(e);
     }
     const changeSize = (e) => {
-        setSize(e.target.value);
+        return props.changeSize(e);
     }
     const changeColor = (e) => {
-        setColor(e.target.value);
+        return props.changeColor(e);
     }
     const changeXy = (e) => {
-        setXy(e.target.value);
+        return props.changeXy(e);
     }
-    useMemo(() => {
-        console.log("family: " + family);
-        console.log("size: " + size);
-        console.log("color: " + color);
-        console.log("xy: " + xy);
-    }, [family, size, color, xy]);
+    // useMemo(() => {
+    //     console.log("family: " + props.family);
+    //     console.log("size: " + props.size);
+    //     console.log("color: " + props.color);
+    //     console.log("xy: " + props.xy);
+    // }, [props.family, props.size, props.color, props.xy]);
 
     return (
         <div style={style}>
@@ -61,15 +73,15 @@ export const ControlPanel = () => {
             <div className={"novel controller"} style={panelStyle}>
                 <div style={boxStyle}>
                     <label htmlFor="font_family" style={labelStyle}>文字の種類</label>
-                    <select name="font_family" style={selectStyle} onChange={changeFamily} value={family}>
-                        <option value="gothic">ゴシック</option>
-                        <option value="mincho">明朝</option>
+                    <select name="font_family" style={selectStyle} onChange={changeFamily} value={props.family}>
+                        <option value={"Kosugi"}>ゴシック</option>
+                        <option value={"Noto Serif JP"}>明朝</option>
                     </select>
                 </div>
 
                 <div style={boxStyle}>
                     <label htmlFor="font_size" style={labelStyle}>文字の大きさ</label>
-                    <select name="font_size" style={selectStyle} onChange={changeSize} value={size}>
+                    <select name="font_size" style={selectStyle} onChange={changeSize} value={props.size}>
                         <option value="small">小</option>
                         <option value="middle">中</option>
                         <option value="large">大</option>
@@ -79,7 +91,7 @@ export const ControlPanel = () => {
 
                 <div style={boxStyle}>
                     <label htmlFor="color" style={labelStyle}>背景色</label>
-                    <select name="color" style={selectStyle} onChange={changeColor} value={color}>
+                    <select name="color" style={selectStyle} onChange={changeColor} value={props.color}>
                         <option value="white">白</option>
                         <option value="black">黒</option>
                         <option value="beige">ベージュ</option>
@@ -88,11 +100,13 @@ export const ControlPanel = () => {
 
                 <div style={boxStyle}>
                     <label htmlFor="xy" style={labelStyle}>組み方向</label>
-                    <select name="xy" style={selectStyle} onChange={changeXy} value={color}>
+                    <select name="xy" style={selectStyle} onChange={changeXy} value={props.xy}>
                         <option value="x">横書き</option>
                         <option value="y">縦書き</option>
                     </select>
                 </div>
+
+                <button>適用</button>
             </div>
         </div>
     );
