@@ -4,10 +4,6 @@ import burger from "../img/burger.png";
 
 export const ControlPanel = (props) => {
     const [isOpen, setIsOpen] = useState(false);
-    // const [family, setFamily] = useState("mincho");
-    // const [size, setSize] = useState("middle");
-    // const [color, setColor] = useState("white");
-    // const [xy, setXy] = useState("x");
     const style = {
         width: "640px",
         height: "440px",
@@ -52,18 +48,6 @@ export const ControlPanel = (props) => {
         width: "100%",
         height: "100%",
     }
-    // const changeFamily = (e) => {
-    //     setFamily(e.target.value);
-    // }
-    // const changeSize = (e) => {
-    //     setSize(e.target.value);
-    // }
-    // const changeColor = (e) => {
-    //     setColor(e.target.value);
-    // }
-    // const changeXy = (e) => {
-    //     setXy(e.target.value);
-    // }
     const changeFamily = (e) => {
         return props.changeFamily(e);
     }
@@ -82,12 +66,6 @@ export const ControlPanel = (props) => {
     const closePanel = () => {
         setIsOpen(false);
     }
-    // useMemo(() => {
-    //     console.log("family: " + props.family);
-    //     console.log("size: " + props.size);
-    //     console.log("color: " + props.color);
-    //     console.log("xy: " + props.xy);
-    // }, [props.family, props.size, props.color, props.xy]);
 
     return (
         <>
