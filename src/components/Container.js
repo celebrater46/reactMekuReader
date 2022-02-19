@@ -40,6 +40,7 @@ export const Container = () => {
     }, [color]);
 
     const direction = useMemo(() => {
+        console.log(xy === "horizontal-tb" ? "row" : "row-reverse");
         return xy === "horizontal-tb" ? "row" : "row-reverse";
         // if(xy === "horizontal-tb"){
         //     return "row";
@@ -48,13 +49,13 @@ export const Container = () => {
         // }
     }, [xy]);
 
-    const left = useMemo(() => {
-        return xy === "horizontal-tb" ? "0" : "auto";
-    }, [xy]);
-
-    const right = useMemo(() => {
-        return xy === "horizontal-tb" ? "auto" : "0";
-    }, [xy]);
+    // const left = useMemo(() => {
+    //     return xy === "horizontal-tb" ? "0" : "auto";
+    // }, [xy]);
+    //
+    // const right = useMemo(() => {
+    //     return xy === "horizontal-tb" ? "auto" : "0";
+    // }, [xy]);
     // const colors = useMemo(() =>{
     //     console.log("colors is working");
     //     // backgroundColor, fontColor
@@ -97,8 +98,8 @@ export const Container = () => {
         alignItems: "flex-start",
         flexWrap: "nowrap",
         position: "absolute",
-        left: left,
-        right: right,
+        left: 0,
+        // right: right,
     }
 
     const p = { color: "black" }
