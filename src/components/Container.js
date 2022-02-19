@@ -7,7 +7,7 @@ export const Container = () => {
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
-    const [xy, setXy] = useState("x");
+    const [xy, setXy] = useState("horizontal-tb");
     const fontSizeNum = useMemo(() => {
         switch (size){
             case "small": return "14px";
@@ -90,7 +90,7 @@ export const Container = () => {
             {/*<HiddenButton type={"right"} width={"48vw"} height={"60vh"} right={"2vw"} top={"20vh"} />*/}
             {/*<HiddenButton type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             {/*<HiddenButton type={"left"} width={"48vw"} height={"60vh"} left={"2vw"} top={"20vh"}/>*/}
-            <Pages fColor={fColor} bgColor={bgColor}/>
+            <Pages fColor={fColor} bgColor={bgColor} xy={xy}/>
             <ControlPanel
                 family={family}
                 size={size}

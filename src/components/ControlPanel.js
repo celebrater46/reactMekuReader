@@ -101,8 +101,8 @@ export const ControlPanel = (props) => {
                 <div style={boxStyle}>
                     <label htmlFor="xy" style={labelStyle}>組み方向</label>
                     <select name="xy" style={selectStyle} onChange={changeXy} value={props.xy}>
-                        <option value="x">横書き</option>
-                        <option value="y">縦書き</option>
+                        <option value="horizontal-tb">横書き</option>
+                        <option value="vertical-rl">縦書き</option>
                     </select>
                 </div>
 

@@ -3,6 +3,7 @@ import React, {useMemo} from "react";
 export const Pages = (props) => {
     const fColor = props.fColor;
     const bgColor = props.bgColor;
+    const xy = props.xy;
     // const fColor = useMemo(() => {
     //     switch (props.color){
     //         case "white": return "#333";
@@ -24,7 +25,8 @@ export const Pages = (props) => {
         backgroundColor: bgColor,
         textAlign: "justify",
         margin: "20px",
-        padding: "40px"
+        padding: "40px",
+        writingMode: xy
     };
     // const style = useMemo(() => {
     //     return {
