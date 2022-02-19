@@ -9,7 +9,7 @@ export const Container = () => {
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
     const [xy, setXy] = useState("horizontal-tb");
-    const [pageNum, setPageNum] = useState(1);
+    // const [pageNum, setPageNum] = useState(1);
 
     const fontSizeNum = useMemo(() => {
         switch (size){
