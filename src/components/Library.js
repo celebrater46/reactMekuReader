@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import {novelsList} from "../novels/novelsList";
 
 export const Library = (props) => {
     const search = window.location.search;
+    const [display, setDisplay] = useState(search === "" ? "flex" : "none");
     const outerStyle = {
         width: "100vw",
         height: "100vh",
@@ -13,7 +14,7 @@ export const Library = (props) => {
         padding: 0,
         color: "white",
         backgroundColor: "#282c34",
-        display: search === "" ? "flex" : "none",
+        display: display,
         justifyContent: "center",
         alignItems: "center",
         // textAlign: "center",
@@ -27,7 +28,9 @@ export const Library = (props) => {
         cursor: "pointer",
     }
     const clickedTitle = (e) => {
-        return props.clickedTitle(e.target.id);
+        setDisplay("none");
+        const id = parseInt(e.target.id.substr(6));
+        return props.clickedTitle(id);
     }
     const titles = (() => {
         return novelsList.map((line) => {

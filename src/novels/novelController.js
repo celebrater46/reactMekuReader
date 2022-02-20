@@ -24,9 +24,12 @@ const convertBr = (texts) => {
 export const getNovels = (novel, ep) => {
     switch (novel){
         case null: return novelsList;
-        case 0: return (ep === null ? gokurakuList : convertBr(gokurakuTexts[ep]));
-        case 1: return (ep === null ? prisonList : convertBr(prisonTexts[ep]));
-        case 2: return (ep === null ? shiroganekiList : convertBr(shiroganekiTexts[ep]));
+        case 1: return (ep === null ? prisonList : prisonTexts[ep]);
+        case 2: return (ep === null ? shiroganekiList : shiroganekiTexts[ep]);
+        case 3: return (ep === null ? gokurakuList : gokurakuTexts[ep]);
+        // case 0: return (ep === null ? gokurakuList : convertBr(gokurakuTexts[ep]));
+        // case 1: return (ep === null ? prisonList : convertBr(prisonTexts[ep]));
+        // case 2: return (ep === null ? shiroganekiList : convertBr(shiroganekiTexts[ep]));
         default: return ["getNovelList() 第一引数 novel の値が不正です。"];
     }
 }

@@ -5,10 +5,12 @@ import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
 import {Scale} from "./Scale";
 import {Library} from "./Library";
+import {getNovels} from "../novels/novelController";
 
 export const Container = () => {
-    const [isLibrary, setIsLibrary] = useState(true);
-    const [novelId, setNovelId] = useState(0);
+    // const [isLibrary, setIsLibrary] = useState(true);
+    const [novelId, setNovelId] = useState(1);
+    const [epId, setEpId] = useState(0);
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
@@ -79,11 +81,12 @@ export const Container = () => {
     const p = { color: "black" }
     const parameter = window.location.search; // ?hoge=0
     useMemo(() => {
+        console.log("novelId: " + novelId);
         console.log("family: " + family);
         console.log("size: " + size);
         console.log("color: " + color);
         console.log("xy: " + xy);
-    }, [family, size, color, xy]);
+    }, [novelId, family, size, color, xy]);
 
     return(
         <div style={div}>
@@ -91,7 +94,13 @@ export const Container = () => {
             {/*<HiddenButton xy={xy} type={"top"} width={"96vw"} height={"18vh"} right={"2vw"} top={"2vh"}/>*/}
             <MovePageButton xy={xy} />
             {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
-            <Pages fColor={fColor} bgColor={bgColor} xy={xy}/>
+            <Pages
+                fColor={fColor}
+                bgColor={bgColor}
+                xy={xy}
+                novelId={novelId}
+                epId={epId}
+            />
             <ControlPanel
                 family={family}
                 size={size}

@@ -1,0 +1,8 @@
+220220
+
+モジュール化した test_split_novel の関数群を getPages.js に配置、
+Pages コンポーネントから読み込ませてみたが、
+戻り値が Promise となっていて受け取れなかった。
+
+しかたないので Pages コンポーネントに移植してみたが、
+今度は clientHeight 効かない問題が発覚。
