@@ -2,6 +2,7 @@ import React from "react";
 import {novelsList} from "../novels/novelsList";
 
 export const Library = (props) => {
+    const search = window.location.search;
     const outerStyle = {
         width: "100vw",
         height: "100vh",
@@ -12,7 +13,7 @@ export const Library = (props) => {
         padding: 0,
         color: "white",
         backgroundColor: "#282c34",
-        display: "flex",
+        display: search === "" ? "flex" : "none",
         justifyContent: "center",
         alignItems: "center",
         // textAlign: "center",
@@ -20,6 +21,10 @@ export const Library = (props) => {
     }
     const innerStyle = {
         fontSize: "40px"
+    }
+    const pStyle = {
+        userSelect: "none",
+        cursor: "pointer",
     }
     const clickedTitle = (e) => {
         return props.clickedTitle(e.target.id);
@@ -33,7 +38,15 @@ export const Library = (props) => {
         let i = 0;
         return titles.map((title) => {
             i++;
-            return <p key={"key-" + i} id={"title-" + i}>{ title }</p>;
+            return (
+                <p
+                    key={"key-" + i}
+                    id={"title-" + i}
+                    onClick={clickedTitle}
+                    style={pStyle}
+                >
+                    { title }
+                </p>);
         });
     })();
     console.log(titles);
@@ -41,9 +54,7 @@ export const Library = (props) => {
     return (
         <div style={outerStyle}>
             <div style={innerStyle}>
-                <p onClick={clickedTitle}>
-                    { getP }
-                </p>
+                { getP }
             </div>
         </div>
     );
