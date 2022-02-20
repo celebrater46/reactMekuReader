@@ -3,8 +3,12 @@ import {HiddenButton} from "./HiddenButton";
 import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
+import {Scale} from "./Scale";
+import {Library} from "./Library";
 
 export const Container = () => {
+    const [isLibrary, setIsLibrary] = useState(true);
+    const [novelId, setNovelId] = useState(0);
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
@@ -39,6 +43,9 @@ export const Container = () => {
         console.log(xy === "horizontal-tb" ? "row" : "row-reverse");
         return xy === "horizontal-tb" ? "row" : "row-reverse";
     }, [xy]);
+    const clickedTitle = (id) => {
+        setNovelId(id);
+    }
     const changeFamily = (e) => {
         setFamily(e.target.value);
     }
@@ -95,6 +102,8 @@ export const Container = () => {
                 changeColor={(e) => changeColor(e)}
                 changeXy={(e) => changeXy(e)}
             />
+            <Scale />
+            <Library clickedTitle={(id) => clickedTitle(id)} />
         </div>
     );
 }
