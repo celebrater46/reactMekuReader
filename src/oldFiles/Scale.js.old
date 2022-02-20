@@ -6,17 +6,15 @@ import {Page} from "../modules/Page";
 export const Scale = (props) => {
     const novelId = 1;
     const epId = 1;
-    const [linesUs, setLinesUs] = useState([]); // lines Use State
+    const [text, setText] = useState([""]);
     const [pageObjs, setPageObjs] = useState([]);
-    const maxWidth = 600;
-    const maxHeight = window.innerHeight * 0.8;
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("");
     const [pHeight, SetPHeight] = useState(0);
     const [divHeight, SetDivHeight] = useState(0);
     const [divHeight2, SetDivHeight2] = useState(0);
-    // const [maxWidth, SetMaxWidth] = useState(null);
-    // const [maxHeight, SetMaxHeight] = useState(null);
+    const [maxWidth, SetMaxWidth] = useState(null);
+    const [maxHeight, SetMaxHeight] = useState(null);
     const [rubyLineHeight, SetRubyLineHeight] = useState(null);
     const fontSize = 20; // px
     const maxChars = Math.floor(maxWidth / fontSize);
@@ -27,15 +25,13 @@ export const Scale = (props) => {
         SetPHeight(pRef.current.clientHeight);
         SetDivHeight(divRef.current.clientHeight);
         SetDivHeight2(divRef2.current.clientHeight);
-        // SetMaxWidth(divRef.current.clientWidth);
-        // SetMaxHeight(divRef.current.clientHeight);
+        SetMaxWidth(divRef.current.clientWidth);
+        SetMaxHeight(divRef.current.clientHeight);
         SetRubyLineHeight(pRef.current.clientHeight);
-        // console.log(text);
+        console.log(text);
     });
     useMemo(() => {
-        const novel = getNovels(novelId, epId);
-        const converted = encodeRuby(novel).split("\n");
-        setLinesUs(converted);
+        setText(getNovels(novelId, epId));
     }, [novelId, epId]);
 
     const getIndexOfLineBreak = (encodedLine, remainLines) => {
@@ -160,25 +156,17 @@ export const Scale = (props) => {
         }
     }
 
-    const createPage = (i, remainLines) => new Promise((resolve, reject) => {
+    const createPage = (i, remainText) => new Promise((resolve, reject) => {
         let page = new Page(i);
         // let lines = encodeRuby(remainText).split("\n");
-        let lines = remainLines;
-        console.log("lines");
-        console.log(lines);
+        let lines = remainText;
         let finalLine = 0;
-        // console.log("lines")
-        console.log("divHeight: " + divHeight);
-        console.log("maxHeight: " + maxHeight);
         for(let j = 0; j < lines.length; j++){
-            // if(divRef.current.clientHeight < maxHeight){
-            if(divHeight < maxHeight){
+            if(divRef.current.clientHeight < maxHeight){
                 const key = "line-" + i + "_" + j;
                 const p = <p key={key} id={key}>{ lines[j] }</p>;
                 setScaleP(scaleP.push(p));
                 page.lines.push(lines[j]);
-                console.log("page.lines.pushed");
-                console.log(page.lines);
             } else {
                 if(finalLine === 0){
                     finalLine = j - 1;
@@ -189,7 +177,7 @@ export const Scale = (props) => {
         if(finalLine > 0){
             setScaleP(scaleP.pop());
             page.lines.pop();
-            const remainHeight = maxHeight - divHeight;
+            const remainHeight = maxHeight - divRef.current.clientHeight;
             let newLines = lines.slice(finalLine + 1);
             if(remainHeight >= rubyLineHeight){
                 const array = separateFinalLine(
@@ -202,18 +190,10 @@ export const Scale = (props) => {
                     newLines.unshift(additionalArray[1]);
                 }
             }
-            console.log("page:");
-            console.log(page);
             setPageObjs(pageObjs.push(page));
-            // setPageObjs(pageObjs + page);
             resolve(newLines);
         } else {
-            // console.log("pageObjs");
-            // console.log(pageObjs);
-            console.log("page:");
-            console.log(page);
             setPageObjs(pageObjs.push(page));
-            // setPageObjs(pageObjs + page);
             resolve("");
         }
     });
@@ -233,22 +213,15 @@ export const Scale = (props) => {
     }
 
     useMemo(() => {
-        // console.log("lines:");
-        // console.log(linesUs);
-        return getPages(linesUs);
-    }, [linesUs]);
-
-    const pStyle = {
-        margin: 0,
-        padding: 0,
-        lineHeight: "150%",
-        fontSize: fontSize + "px",
-    }
+        console.log("lines:");
+        console.log(text);
+        return getPages(text);
+    }, [text]);
 
     return (
         <>
             <div id={"scale"} ref={ divRef }>
-                <p id={"scale_p"} ref={ pRef } style={pStyle}>
+                <p id={"scale_p"} ref={ pRef }>
                     { scaleP }
                 </p>
             </div>

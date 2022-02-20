@@ -191,11 +191,11 @@ const createPage = (i, remainText) => new Promise((resolve, reject) => {
 
 let i = 0;
 let remains = "";
-export const getPages = async(str) => {
+export const getPagesJs = async(str) => {
     remains = await createPage(i, str);
     if(remains.length > 0){
         i++;
-        getPages(remains);
+        getPagesJs(remains);
     }
     return pages; // 複数の Page クラスの配列
 }

@@ -2,8 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import Ajax from "./components/Ajax";
 import {NoAjax} from "./components/NoAjax";
-import {Container} from "./components/Container";
 import {Scale} from "./components/Scale";
+import {Test} from "./components/Test";
 
 function App() {
   return (
@@ -21,8 +21,8 @@ function App() {
         {/*>*/}
         {/*  Learn React*/}
         {/*</a>*/}
-        {/*<Container />*/}
           <Scale />
+          {/*<Test />*/}
       </header>
     </div>
   );

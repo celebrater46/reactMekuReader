@@ -1,44 +1,119 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {getNovels} from "../novels/novelController";
 import {encodeRuby} from "../modules/encoder";
+// import {getPagesJs} from "../modules/getPagesJs";
 import {Page} from "../modules/Page";
 
-export const Scale = (props) => {
-    const novelId = 1;
-    const epId = 1;
-    const [linesUs, setLinesUs] = useState([]); // lines Use State
+export const Pages = (props) => {
+    const novelId = props.novelId;
+    const epId = props.epId;
+    const [text, setText] = useState([""]);
     const [pageObjs, setPageObjs] = useState([]);
-    const maxWidth = 600;
-    const maxHeight = window.innerHeight * 0.8;
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("");
     const [pHeight, SetPHeight] = useState(0);
     const [divHeight, SetDivHeight] = useState(0);
     const [divHeight2, SetDivHeight2] = useState(0);
-    // const [maxWidth, SetMaxWidth] = useState(null);
-    // const [maxHeight, SetMaxHeight] = useState(null);
+    const [maxWidth, SetMaxWidth] = useState(null);
+    const [maxHeight, SetMaxHeight] = useState(null);
     const [rubyLineHeight, SetRubyLineHeight] = useState(null);
-    const fontSize = 20; // px
-    const maxChars = Math.floor(maxWidth / fontSize);
+    const fColor = props.fColor;
+    const bgColor = props.bgColor;
+    const xy = props.xy;
+
     const divRef = useRef(null);
     const divRef2 = useRef(null);
     const pRef = useRef(null);
+    // const scale = document.getElementById("scale");
+    // const scalePRuby = document.getElementById("scale_p_ruby");
     useEffect(() => {
         SetPHeight(pRef.current.clientHeight);
         SetDivHeight(divRef.current.clientHeight);
         SetDivHeight2(divRef2.current.clientHeight);
-        // SetMaxWidth(divRef.current.clientWidth);
-        // SetMaxHeight(divRef.current.clientHeight);
+        SetMaxWidth(divRef.current.clientWidth);
+        SetMaxHeight(divRef.current.clientHeight);
         SetRubyLineHeight(pRef.current.clientHeight);
-        // console.log(text);
+        // return pRef.current.clientHeight;
+    }); // 一行の高さ（ルビあり）
+    // const maxWidth = divRef.current.clientWidth;
+    // const maxHeight = divRef.current.clientHeight;
+    // const rubyLineHeight = pRef.current.clientHeight; // 一行の高さ（ルビあり）
+    // const maxWidth = divRef.current.clientWidth;
+    // const maxHeight = divRef.current.clientHeight;
+    const fontSize = 20; // px
+    const maxChars = Math.floor(maxWidth / fontSize); // 1行あたりの最大文字数
+
+    const pageDivs = useMemo(() => {
+        let i = -1;
+        return pageObjs.map((page) => {
+            const linesP = page.lines.map((line) => {
+                return <p key={"line-" + i}>{ line }</p>;
+            });
+            i++;
+            return (
+                <div key={"outer-" + i} style={outerStyle}>
+                    <div key={"inner-" + i} id={"p-" + i} style={innerStyle}>
+                        { linesP }
+                    </div>
+                </div>
+            );
+        });
+    }, [pageObjs]);
+
+    const innerMargin = useMemo(() => {
+        return xy === "horizontal-tb" ? "0 auto 0 0" : "0 0 0 auto";
+    }, [xy]);
+
+    const outerStyle = {
+        backgroundColor: bgColor,
+        margin: "20px " + ((windowWidth - 700) / 2) + "px",
+        padding: "50px",
+        width: "700px",
+        height: "70vh",
+    }
+    const innerStyle = {
+        color: fColor,
+        textAlign: "justify",
+        writingMode: xy,
+        margin: innerMargin,
+    };
+
+    // const createTestPages = () => {
+    //     let pages = [];
+    //     for(let i = 0; i < 5; i++){
+    //         pages.push(
+    //             <div key={"outer-" + i} style={outerStyle}>
+    //                 <div key={"inner-" + i} id={"p-" + i} style={innerStyle}>
+    //                     <p>{i + 1}ページめ！</p>
+    //                     <p>これはテストやで！</p>
+    //                     <p>これはテストやで！</p>
+    //                     <p>これはテストやで！</p>
+    //                     <p>これはテストやで！</p>
+    //                 </div>
+    //             </div>
+    //         );
+    //     }
+    //     return pages;
+    // }
+
+    window.addEventListener('resize', () => {
+        console.log('resized window');
+        setWindowWidth(window.innerWidth);
     });
+
     useMemo(() => {
-        const novel = getNovels(novelId, epId);
-        const converted = encodeRuby(novel).split("\n");
-        setLinesUs(converted);
+        // const str = getNovels(novelId, epId);
+        // console.log("str: ");
+        // console.log(str);
+        // const lines = encodeRuby(str).split("\n");
+        // setText(lines);
+        setText(getNovels(novelId, epId));
     }, [novelId, epId]);
 
     const getIndexOfLineBreak = (encodedLine, remainLines) => {
+        // let scaleTest = document.getElementById("scale_test");
+        // scaleTest.innerHTML = "";
         const maxHeight = rubyLineHeight * remainLines;
         console.log("maxHeight: " + maxHeight);
         let str = encodedLine;
@@ -48,6 +123,7 @@ export const Scale = (props) => {
                 // ルビタグの抽出
                 const ruby = str.match(/<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/);
                 setScaleP2(scaleP2 + ruby);
+                // scaleTest.innerHTML += ruby[0];
                 if(divRef2.current.clientHeight > maxHeight){
                     console.log("divRef2.current.innerHTML");
                     console.log(divRef2.current.innerHTML);
@@ -58,6 +134,7 @@ export const Scale = (props) => {
                 str = str.replace("<ruby>", "<xxxx>"); // 現在のルビタグの無効化
             } else {
                 setScaleP2(scaleP2 + str.substr(num, 1));
+                // scaleTest.innerHTML += str.substr(num, 1);
                 if(divRef2.current.clientHeight > maxHeight){
                     console.log("divRef2.current.innerHTML");
                     console.log(divRef2.current.innerHTML);
@@ -140,6 +217,8 @@ export const Scale = (props) => {
     // 最終行が複数行の場合、一度テスト用のPタグに入れて実測
     const getTruePHeight = (line) => {
         setScaleP(line);
+        // let scaleP = document.getElementById("scale_p");
+        // scaleP.innerHTML = line;
         return pRef.current.clientHeight;
     }
 
@@ -160,25 +239,31 @@ export const Scale = (props) => {
         }
     }
 
-    const createPage = (i, remainLines) => new Promise((resolve, reject) => {
+    // let pages = [];
+    const createPage = (i, remainText) => new Promise((resolve, reject) => {
         let page = new Page(i);
-        // let lines = encodeRuby(remainText).split("\n");
-        let lines = remainLines;
-        console.log("lines");
-        console.log(lines);
+        let lines = encodeRuby(remainText).split("\n");
+        // let container = document.getElementById("containter");
+        // let outer = document.createElement("div");
+        // outer.classList.add("page");
+        // let pageDiv = document.createElement("div");
+        // outer.appendChild(pageDiv);
+        // container.appendChild(outer);
+        // const pHeight = document.getElementById("scale_p").clientHeight;
+        // pageDiv.id = "p-" + i;
+        // let currentHeight = 0;
         let finalLine = 0;
-        // console.log("lines")
-        console.log("divHeight: " + divHeight);
-        console.log("maxHeight: " + maxHeight);
+        // console.log("maxHeight" + maxHeight);
         for(let j = 0; j < lines.length; j++){
-            // if(divRef.current.clientHeight < maxHeight){
-            if(divHeight < maxHeight){
+            if(divRef.current.clientHeight < maxHeight){
                 const key = "line-" + i + "_" + j;
                 const p = <p key={key} id={key}>{ lines[j] }</p>;
                 setScaleP(scaleP.push(p));
+                // let p = document.createElement("p");
                 page.lines.push(lines[j]);
-                console.log("page.lines.pushed");
-                console.log(page.lines);
+                // p.innerHTML = lines[j];
+                // pageDiv.appendChild(p);
+                // currentHeight += pHeight;
             } else {
                 if(finalLine === 0){
                     finalLine = j - 1;
@@ -189,7 +274,8 @@ export const Scale = (props) => {
         if(finalLine > 0){
             setScaleP(scaleP.pop());
             page.lines.pop();
-            const remainHeight = maxHeight - divHeight;
+            // pageDiv.lastElementChild.remove(); // はみ出した最後の一行を削除
+            const remainHeight = maxHeight - divRef.current.clientHeight;
             let newLines = lines.slice(finalLine + 1);
             if(remainHeight >= rubyLineHeight){
                 const array = separateFinalLine(
@@ -197,58 +283,53 @@ export const Scale = (props) => {
                     Math.floor(remainHeight / rubyLineHeight)
                 );
                 const additionalArray = getAdditionalStr(remainHeight, array);
+                // let finalP = document.createElement("p");
+                // finalP.innerHTML = array[0] + additionalArray[0];
+                // page.appendChild(finalP);
                 page.lines.push(array[0] + additionalArray[0]);
                 if(additionalArray[1] !== null){
                     newLines.unshift(additionalArray[1]);
                 }
             }
-            console.log("page:");
-            console.log(page);
+            // console.log("page.clientHeight: " + pageDiv.clientHeight);
+            // pages.push(page);
             setPageObjs(pageObjs.push(page));
-            // setPageObjs(pageObjs + page);
-            resolve(newLines);
+            resolve(newLines.join("\n"));
         } else {
-            // console.log("pageObjs");
-            // console.log(pageObjs);
-            console.log("page:");
-            console.log(page);
+            // pages.push(page);
             setPageObjs(pageObjs.push(page));
-            // setPageObjs(pageObjs + page);
             resolve("");
         }
     });
 
     let i = 0;
     let remains = "";
-    const getPages = async(str) => {
+    const getPagesJs = async(str) => {
         remains = await createPage(i, str);
 
         if(remains.length > 0){
             i++;
-            getPages(remains);
-        } else {
-            console.log("pageObjs");
-            console.log(pageObjs);
+            getPagesJs(remains);
         }
+        // return pages; // 複数の Page クラスの配列
     }
 
     useMemo(() => {
-        // console.log("lines:");
-        // console.log(linesUs);
-        return getPages(linesUs);
-    }, [linesUs]);
+        console.log("lines:");
+        console.log(text);
+        return getPagesJs(text);
+    }, [text]);
 
-    const pStyle = {
-        margin: 0,
-        padding: 0,
-        lineHeight: "150%",
-        fontSize: fontSize + "px",
-    }
+    useMemo(() => {
+        console.log(pageObjs);
+    }, [pageObjs]);
 
     return (
         <>
+            {/*{ createTestPages() }*/}
+            { pageDivs }
             <div id={"scale"} ref={ divRef }>
-                <p id={"scale_p"} ref={ pRef } style={pStyle}>
+                <p id={"scale_p"} ref={ pRef }>
                     { scaleP }
                 </p>
             </div>

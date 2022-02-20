@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from "react";
 import {getNovels} from "../novels/novelController";
 import {encodeRuby} from "../modules/encoder";
-import {getPages} from "../modules/getPages";
+import {getPagesJs} from "../modules/getPagesJs";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
@@ -14,7 +14,7 @@ export const Pages = (props) => {
     const pages = useMemo(() => {
         console.log("lines:");
         console.log(text);
-        return getPages(text);
+        return getPagesJs(text);
     }, [text]);
     const pageDivs = useMemo(() => {
         let i = -1;
