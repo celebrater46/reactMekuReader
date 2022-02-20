@@ -1,6 +1,7 @@
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 
 export const Pages = (props) => {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const fColor = props.fColor;
     const bgColor = props.bgColor;
     const xy = props.xy;
@@ -9,7 +10,7 @@ export const Pages = (props) => {
     }, [xy]);
     const outerStyle = {
         backgroundColor: bgColor,
-        margin: "20px " + ((window.innerWidth - 700) / 2) + "px",
+        margin: "20px " + ((windowWidth - 700) / 2) + "px",
         padding: "50px",
         width: "700px",
         height: "70vh",
@@ -37,6 +38,10 @@ export const Pages = (props) => {
         }
         return pages;
     }
+    window.addEventListener('resize', () => {
+        console.log('resized window');
+        setWindowWidth(window.innerWidth);
+    });
 
     return (
         <>
