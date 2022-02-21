@@ -58,8 +58,8 @@ const encodeJsxRuby = (line) => {
             array.push(str.substr(0, rubyIndex));
             const ruby = str.match(/｜([^《]+)《([^》]+)》/);
             // str = dotConverted.replace(/｜《([^》]+)》/g, "≪$1≫");
-            console.log("ruby");
-            console.log(ruby);
+            // console.log("ruby");
+            // console.log(ruby);
             // const jsxRuby = ruby[0].replace(
             //     /<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/,
             //     <ruby><rb>$1</rb><rp>(</rp><rt>$2</rt><rp>)</rp></ruby>
@@ -68,7 +68,7 @@ const encodeJsxRuby = (line) => {
             // array.push(jsxRuby);
             array.push(<ruby><rb>{ ruby[1] }</rb><rp>(</rp><rt>{ ruby[2] }</rt><rp>)</rp></ruby>);
             str = str.substr(rubyIndex + ruby[0].length);
-            console.log("ruby[0].length: " + ruby[0].length);
+            // console.log("ruby[0].length: " + ruby[0].length);
         } else {
             array.push(str);
             break;

@@ -11,6 +11,7 @@ export const Scale = (props) => {
     const [jsxPageObjs, setJsxPageObjs] = useState([]);
     const maxWidth = 600;
     const maxHeight = window.innerHeight * 0.8;
+    // console.log(maxHeight)
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("テスト２");
     const fontSize = 20; // px
@@ -26,24 +27,26 @@ export const Scale = (props) => {
     const getIndexOfLineBreak = (line, remainLines) => {
         const maxHeight = rubyLineHeight * remainLines;
         let str = line;
+        console.log("line: " + line);
         let num = 0;
         let sumHeight = rubyLineHeight;
         while(str.length > maxChars){
             let rubyChars = 0; // 行内にルビが存在した場合の補正値（改行したらリセット）
             const rubyIndex = str.indexOf("｜");
-            console.log("rubyIndex: " + rubyIndex);
+            // console.log("rubyIndex: " + rubyIndex);
             if(rubyIndex > -1 && rubyIndex < maxChars + rubyChars){
                 const ruby = str.match(/｜([^《]+)《([^》]+)》/);
-                console.log("ruby:");
-                console.log(ruby);
+                // console.log("ruby:");
+                // console.log(ruby);
                 const ratio = ruby[2].length / ruby[1].length; // 1-3: 1.5, 2-5: 2.5, 1-5: 2.5
                 const trueChars = ratio > 2 ? ruby[2].length / 2 : ruby[1].length;
-                console.log("trueChars: " + trueChars);
+                // console.log("trueChars: " + trueChars);
                 const currentWidth = rubyIndex * fontSize + trueChars * fontSize;
                 if(currentWidth > maxWidth){
                     num += rubyIndex;
                     sumHeight += rubyLineHeight;
                     if(sumHeight > maxHeight){
+                        console.log("HELLO!!!!!!!!!!!!!!");
                         return num;
                     } else {
                         str = str.substr(rubyIndex);
@@ -64,6 +67,7 @@ export const Scale = (props) => {
                 num += maxChars + rubyChars;
                 sumHeight += rubyLineHeight;
                 if(sumHeight > maxHeight){
+                    console.log("HELLO!!!!!!!!!!!!!!!");
                     return num;
                 } else {
                     str = str.substr(maxChars);
@@ -74,9 +78,10 @@ export const Scale = (props) => {
                 console.log("endless loop occurred")
                 return -1; // 無限ループエラー対策
             }
-            console.log("num: " + num);
+            // console.log("num: " + num);
         }
-        if(sumHeight + rubyLineHeight > maxHeight){
+        if(sumHeight + rubyLineHeight > maxHeight && line > maxChars){
+            console.log("HELLO????????????????");
             return num;
         } else {
             return -1; // ページ内にすべての文字が収まる場合
@@ -119,20 +124,26 @@ export const Scale = (props) => {
                 alert("endless loop occurred");
             }
         }
-        console.log("sum: " + sum);
+        // console.log("sum: " + sum);
         return sum;
     }
 
     const separateFinalLine = (line, remainLines) => {
         const rubyIndex = line.indexOf("｜");
         const max = maxChars * remainLines;
-        console.log("max: " + max);
+        // console.log("max: " + max);
         if(rubyIndex > -1 && rubyIndex < max){
             // ルビが１行内にあるなら、新しい改行ポイント indexOf を取得
             const lineBreak = getIndexOfLineBreak(line, remainLines);
+            if(lineBreak === -1){
+                return [line, null];
+            }
             console.log("lineBreak: " + lineBreak);
+            // if(lineBreak === 0){
+            //     console.log("lineBreak is Problem: " + lineBreak);
+            // }
             // １行で収まりきらない場合は分割
-            if(line.length > lineBreak){
+            if(line.length > lineBreak && lineBreak > 0){
                 return [line.substr(0, lineBreak), line.substr(lineBreak)];
             }
         } else {
@@ -140,18 +151,78 @@ export const Scale = (props) => {
                 const kinsoku = getNumOfDeletedCharsBykinsoku(line);
                 const line1 = line.substr(0, max - kinsoku);
                 const line2 = line.substr(max - kinsoku);
+                // console.log("kinsoku: " + kinsoku);
                 return [line1, line2];
             }
         }
         return [line, null];
     }
 
+    // 1行の幅を計算（オーバーサイズルビにも対応）
+    const calcPWidth = (line) => {
+        let str = line;
+        if(str.indexOf("<ruby>") > -1){
+            const rubys = str.match(/<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/g);
+            rubys.map((ruby) => {
+                // const tempStr = ruby.replace(
+                //     /<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/g,
+                //     "$1《$2"
+                // );
+                let tempStr = ruby.replace("<ruby><rb>", "");
+                tempStr = tempStr.replace("</rt><rp>)</rp></ruby>", "");
+                const rprt = tempStr.split("</rb><rp>(</rp><rt>");
+                const remainChars = Math.ceil(rprt[1].length / rprt[0].length) - rprt[0].length; // オーバーサイズルビの増加文字数
+                let addition = "";
+                for(let i = 0; i < remainChars; i++){
+                    addition += "🥺"; // pien
+                }
+                str = str.replace(ruby, rprt[0] + addition);
+            });
+            // return rubys;
+        }
+        return str.length * fontSize;
+    }
+
+    const calcPHeight = (line) => {
+        let scale = 0;
+        let str = line;
+        // console.log("str: ");
+        // console.log(str);
+        // console.log("str.length: ");
+        // console.log(str.length);
+        // let checkedStr = "";
+        let i = 0;
+        while(str.length > 0){
+            // console.log("HELO");
+            const rubyIndex = str.indexOf("｜");
+            if(rubyIndex > -1 && rubyIndex < maxChars){
+                const array = separateFinalLine(str, 1);
+                // console.log("array");
+                // console.log(array);
+                if(array[1] !== null){
+                    str = array[1];
+                }
+            } else {
+                const kinsoku = getNumOfDeletedCharsByKinsokuOneLine(str);
+                // checkedStr += str.substr(0, maxChars - kinsoku);
+                str = str.substr(maxChars - kinsoku);
+            }
+            scale += rubyLineHeight;
+            i++;
+            if(i > 1000){
+                console.log("endless loop!!!!!!!!!!!");
+                break;
+            }
+        }
+        return scale;
+    }
+
     const createPage = (i, remainLines) => new Promise((resolve, reject) => {
         let page = new Page(i);
         // let lines = encodeRuby(remainText).split("\n");
         let lines = remainLines;
-        // console.log("lines");
-        // console.log(lines);
+        console.log("lines");
+        console.log(lines);
         let finalLine = 0;
         // console.log("lines")
         // console.log("currentHeight: " + currentHeight);
@@ -163,7 +234,10 @@ export const Scale = (props) => {
                 const key = "line-" + i + "_" + j;
                 // const p = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
                 page.lines.push(lines[j]);
-                currentHeight += rubyLineHeight;
+                const pHeight = calcPHeight(lines[j]);
+                console.log("lines[j]: '" + lines[j] + "'");
+                console.log("pHeight: " + pHeight);
+                currentHeight += pHeight;
                 // page.lines[j] = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
                 // setScaleP(scaleP.push(p));
                 // page.lines.push(lines[j]);
@@ -193,16 +267,16 @@ export const Scale = (props) => {
                     newLines.unshift(array[1]);
                 }
             }
-            console.log("page:");
-            console.log(page);
+            // console.log("page:");
+            // console.log(page);
             setPageObjs(pageObjs.push(page));
             // setPageObjs(pageObjs + page);
             resolve(newLines);
         } else {
             // console.log("pageObjs");
             // console.log(pageObjs);
-            console.log("page:");
-            console.log(page);
+            // console.log("page:");
+            // console.log(page);
             setPageObjs(pageObjs.push(page));
             // setPageObjs(pageObjs + page);
             resolve("");
@@ -218,8 +292,8 @@ export const Scale = (props) => {
             i++;
             getPages(remains);
         } else {
-            console.log("pageObjs");
-            console.log(pageObjs);
+            // console.log("pageObjs");
+            // console.log(pageObjs);
             // setJsxPageObjs(
             //     [
             //         <div style={divStyle}>
@@ -263,9 +337,12 @@ export const Scale = (props) => {
         // setScaleP(<p>{ jsx1 }</p>);
         // setScaleP2(<p>{ jsx2 }</p>);
         const testEpisode = getNovels(1, 1).split("\n");
+        const escapeLineHasNoChar = testEpisode.map((line) => {
+            return line === "" ? "　" : line;
+        });
         // console.log("testEpisode");
         // console.log(testEpisode);
-        getPages(testEpisode);
+        getPages(escapeLineHasNoChar);
         // const testArray = test
         // setScaleP(<p>{array[0]}</p>);
         // setScaleP2(<p>{array[1]}</p>);
@@ -284,12 +361,14 @@ export const Scale = (props) => {
         textAlign: "left"
     }
     const divStyle = {
-        width: maxWidth
+        width: maxWidth,
+        backgroundColor: "#000",
+        margin: "20px"
     }
 
     useMemo(() => {
-        console.log("pageObjs ---");
-        console.log(pageObjs);
+        // console.log("pageObjs ---");
+        // console.log(pageObjs);
         // console.log("pageObjs[0].lines");
         // console.log(pageObjs[0].lines);
         // const tempObj = pageObjs.map((obj) => {
