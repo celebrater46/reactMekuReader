@@ -10,8 +10,8 @@ export const Scale = (props) => {
     const [pageObjs, setPageObjs] = useState([]);
     const maxWidth = 600;
     const maxHeight = window.innerHeight * 0.8;
-    // const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
-    // const [scaleP2, setScaleP2] = useState("");
+    const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
+    const [scaleP2, setScaleP2] = useState("テスト２");
     // const [pHeight, SetPHeight] = useState(0);
     // const [divHeight, SetDivHeight] = useState(0);
     // const [divHeight2, SetDivHeight2] = useState(0);
@@ -342,7 +342,10 @@ export const Scale = (props) => {
         // console.log("lines:");
         // console.log(linesUs);
         // console.log(calcPWidth(encodeRuby(testLine)));
-        console.log(getIndexOfLineBreak(encodeRuby(testLine), 1));
+        // console.log(getIndexOfLineBreak(encodeRuby(testLine), 1));
+        const array = separateFinalLine(encodeRuby(testLine), 1);
+        setScaleP(<p>{array[0]}</p>);
+        setScaleP2(<p>{array[1]}</p>);
         // return getPages(linesUs);
     }, [linesUs]);
 
@@ -353,10 +356,20 @@ export const Scale = (props) => {
         lineHeight: "100%",
         fontSize: fontSize + "px",
     }
+    const divStyle = {
+        width: maxWidth
+    }
 
     return (
         <>
-
+            <div id={"scale"} style={divStyle}>
+                <p id={"scale_p"} style={pStyle}>
+                    { scaleP }
+                </p>
+            </div>
+            <div id={"scale2"} style={{ display: "inline-block" }}>
+                { scaleP2 }
+            </div>
         </>
     );
 }
