@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Page} from "../modules/Page";
 import {encodeJsxRuby} from "../modules/encoder";
+import {getNovels} from "../novels/novelController";
 
 export const Scale = (props) => {
     const novelId = 1;
@@ -11,27 +12,10 @@ export const Scale = (props) => {
     const maxHeight = window.innerHeight * 0.8;
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("テスト２");
-    // const [pHeight, SetPHeight] = useState(0);
-    // const [divHeight, SetDivHeight] = useState(0);
-    // const [divHeight2, SetDivHeight2] = useState(0);
-    // const [maxWidth, SetMaxWidth] = useState(null);
-    // const [maxHeight, SetMaxHeight] = useState(null);
-    // const [rubyLineHeight, SetRubyLineHeight] = useState(null);
     const fontSize = 20; // px
     const rubyLineHeight = fontSize * 1.6; // px
     const maxChars = Math.floor(maxWidth / fontSize);
-    // const divRef = useRef(null);
-    // const divRef2 = useRef(null);
-    // const pRef = useRef(null);
-    // useEffect(() => {
-    //     SetPHeight(pRef.current.clientHeight);
-    //     SetDivHeight(divRef.current.clientHeight);
-    //     SetDivHeight2(divRef2.current.clientHeight);
-    //     // SetMaxWidth(divRef.current.clientWidth);
-    //     // SetMaxHeight(divRef.current.clientHeight);
-    //     SetRubyLineHeight(pRef.current.clientHeight);
-    //     // console.log(text);
-    // });
+
     // useMemo(() => {
     //     const novel = getNovels(novelId, epId);
     //     const converted = encodeRuby(novel).split("\n");
@@ -40,8 +24,6 @@ export const Scale = (props) => {
 
     const getIndexOfLineBreak = (line, remainLines) => {
         const maxHeight = rubyLineHeight * remainLines;
-        // console.log("maxHeight: " + maxHeight);
-        // console.log("maxWidth: " + maxWidth);
         let str = line;
         let num = 0;
         let sumHeight = rubyLineHeight;
@@ -145,7 +127,6 @@ export const Scale = (props) => {
         const max = maxChars * remainLines;
         console.log("max: " + max);
         if(rubyIndex > -1 && rubyIndex < max){
-            // const encoded = encodeRuby(line);
             // ルビが１行内にあるなら、新しい改行ポイント indexOf を取得
             const lineBreak = getIndexOfLineBreak(line, remainLines);
             console.log("lineBreak: " + lineBreak);
@@ -164,69 +145,6 @@ export const Scale = (props) => {
         return [line, null];
     }
 
-    // 最終行が複数行の場合、一度テスト用のPタグに入れて実測
-    // const getTruePHeight = (line) => {
-    //     setScaleP(line);
-    //     return pRef.current.clientHeight;
-    // }
-
-    // 実測した最終行が空きスペースより1行以上少ない場合、追加分を再取得
-    // const getAdditionalStr = (remainHeight, array) => {
-    //     const trueHeight = getTruePHeight(array[0]);
-    //     const remainLines = remainHeight - trueHeight;
-    //     if(remainLines > rubyLineHeight
-    //         && array[1].length > 0)
-    //     {
-    //         // 実測した最終行が空きスペースより1行以上少ない場合、追加分を再取得
-    //         return separateFinalLine(
-    //             array[1],
-    //             Math.floor(remainLines / rubyLineHeight)
-    //         );
-    //     } else {
-    //         return ["", array[1]];
-    //     }
-    // }
-
-    // 1行の幅を計算（オーバーサイズルビにも対応）
-    // const calcPWidth = (line) => {
-    //     let str = line;
-    //     if(str.indexOf("<ruby>") > -1){
-    //         const rubys = str.match(/<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/g);
-    //         rubys.map((ruby) => {
-    //             // const tempStr = ruby.replace(
-    //             //     /<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/g,
-    //             //     "$1《$2"
-    //             // );
-    //             let tempStr = ruby.replace("<ruby><rb>", "");
-    //             tempStr = tempStr.replace("</rt><rp>)</rp></ruby>", "");
-    //             const rprt = tempStr.split("</rb><rp>(</rp><rt>");
-    //             const remainChars = Math.ceil(rprt[1].length / rprt[0].length) - rprt[0].length; // オーバーサイズルビの増加文字数
-    //             let addition = "";
-    //             for(let i = 0; i < remainChars; i++){
-    //                 addition += "🥺"; // pien
-    //             }
-    //             str = str.replace(ruby, rprt[0] + addition);
-    //         });
-    //         // return rubys;
-    //     }
-    //     return str.length * fontSize;
-    // }
-
-    // const calcPHeight = (line) => {
-    //     let scale = 0;
-    //     let str = line;
-    //     let checkedStr = "";
-    //     if(str.indexOf("<ruby>") > -1){
-    //
-    //     } else {
-    //         const kinsoku = getNumOfDeletedCharsByKinsokuOneLine(str);
-    //         checkedStr += str.substr(0, maxChars - kinsoku);
-    //         str = str.substr(maxChars - kinsoku);
-    //         scale += rubyLineHeight;
-    //     }
-    //     return scale;
-    // }
-
     const createPage = (i, remainLines) => new Promise((resolve, reject) => {
         let page = new Page(i);
         // let lines = encodeRuby(remainText).split("\n");
@@ -235,21 +153,22 @@ export const Scale = (props) => {
         // console.log(lines);
         let finalLine = 0;
         // console.log("lines")
-        // console.log("divHeight: " + divHeight);
+        // console.log("currentHeight: " + currentHeight);
         // console.log("maxHeight: " + maxHeight);
-        let divHeight = 0;
+        let currentHeight = rubyLineHeight;
         for(let j = 0; j < lines.length; j++){
             // if(divRef.current.clientHeight < maxHeight){
-            if(divHeight < maxHeight){
+            if(currentHeight < maxHeight){
                 const key = "line-" + i + "_" + j;
                 // const p = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
-                page.lines.push = lines[j];
+                page.lines.push(lines[j]);
+                currentHeight += rubyLineHeight;
                 // page.lines[j] = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
                 // setScaleP(scaleP.push(p));
                 // page.lines.push(lines[j]);
                 // console.log("page.lines.pushed");
                 // console.log(page.lines);
-                // console.log("divHeight: " + divHeight);
+                // console.log("currentHeight: " + currentHeight);
             } else {
                 if(finalLine === 0){
                     finalLine = j - 1;
@@ -260,7 +179,7 @@ export const Scale = (props) => {
         if(finalLine > 0){
             // setScaleP(scaleP.pop());
             page.lines.pop();
-            const remainHeight = maxHeight - divHeight;
+            const remainHeight = maxHeight - currentHeight;
             let newLines = lines.slice(finalLine + 1);
             if(remainHeight >= rubyLineHeight){
                 const array = separateFinalLine(
@@ -289,20 +208,20 @@ export const Scale = (props) => {
         }
     });
 
-    // let i = 0;
-    // let remains = "";
-    // const getPages = async(str) => {
-    //     remains = await createPage(i, str);
-    //
-    //     if(remains.length > 0){
-    //         i++;
-    //         getPages(remains);
-    //     } else {
-    //         console.log("pageObjs");
-    //         console.log(pageObjs);
-    //     }
-    // }
-    //
+    let i = 0;
+    let remains = "";
+    const getPages = async(str) => {
+        remains = await createPage(i, str);
+
+        if(remains.length > 0){
+            i++;
+            getPages(remains);
+        } else {
+            console.log("pageObjs");
+            console.log(pageObjs);
+        }
+    }
+
     const testLine = "　勤務先は大手家電量販店ビックリカメラ｜六出那《ろくでなろくでなろくでななな》支店。無論、正社員などではない。ここに《サラリーマン》は｜存在しない《ノット・イクシスト》。会社の都合でいつでも｜馘首《クビ》にされる百円ライターさながらの使い捨て｜非正規社員《イレギュラー》である。";
     const testLine2 = "　さらに｜齢《よわい》二十三にもなる息子の行動のすべてを刑務所の看守もどん引きするレベルで監視してくる、いわゆる過干渉型の｜毒母《どくはは》であり、腕っぷしも立つ分反抗すら困難を極めるというまるでフィクションのような悪の権化だ。";
 
@@ -311,21 +230,30 @@ export const Scale = (props) => {
         // console.log(linesUs);
         // console.log(calcPWidth(encodeRuby(testLine)));
         // console.log(getIndexOfLineBreak(testLine, 1));
-        const array = separateFinalLine(testLine, 2);
-        console.log("array:");
-        console.log(array);
-        const jsx1 = encodeJsxRuby(array[0]);
-        console.log("jsx1: ");
-        console.log(jsx1);
-        const jsx2 = encodeJsxRuby(array[1]);
-        console.log("jsx2: ");
-        console.log(jsx2);
-        setScaleP(<p>{ jsx1 }</p>);
-        setScaleP2(<p>{ jsx2 }</p>);
+        // const array = separateFinalLine(testLine, 2);
+        // console.log("array:");
+        // console.log(array);
+        // const jsx1 = encodeJsxRuby(array[0]);
+        // console.log("jsx1: ");
+        // console.log(jsx1);
+        // const jsx2 = encodeJsxRuby(array[1]);
+        // console.log("jsx2: ");
+        // console.log(jsx2);
+        // setScaleP(<p>{ jsx1 }</p>);
+        // setScaleP2(<p>{ jsx2 }</p>);
+        const testEpisode = getNovels(1, 1).split("\n");
+        // console.log("testEpisode");
+        // console.log(testEpisode);
+        getPages(testEpisode);
+        // const testArray = test
         // setScaleP(<p>{array[0]}</p>);
         // setScaleP2(<p>{array[1]}</p>);
         // return getPages(linesUs);
     }, [linesUs]);
+
+    useMemo(() => {
+        console.log(pageObjs);
+    }, [pageObjs]);
 
     // padding-top はフォントの 0.6 倍、line-height は等倍でルビとルビなし行が同じ高さになる
     const pStyle = {
@@ -333,7 +261,7 @@ export const Scale = (props) => {
         padding: fontSize * 0.6 + "px 0 0",
         lineHeight: "100%",
         fontSize: fontSize + "px",
-        fontFamily: "Kosugi, Noto Serif JP, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
+        fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
         textAlign: "left"
     }
     const divStyle = {
