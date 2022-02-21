@@ -8,12 +8,13 @@ export const Scale = (props) => {
     const epId = 1;
     const [linesUs, setLinesUs] = useState([]); // lines Use State
     const [pageObjs, setPageObjs] = useState([]);
+    const [jsxPageObjs, setJsxPageObjs] = useState([]);
     const maxWidth = 600;
     const maxHeight = window.innerHeight * 0.8;
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("テスト２");
     const fontSize = 20; // px
-    const rubyLineHeight = fontSize * 1.6; // px
+    const rubyLineHeight = fontSize * 2; // px
     const maxChars = Math.floor(maxWidth / fontSize);
 
     // useMemo(() => {
@@ -219,6 +220,26 @@ export const Scale = (props) => {
         } else {
             console.log("pageObjs");
             console.log(pageObjs);
+            // setJsxPageObjs(
+            //     [
+            //         <div style={divStyle}>
+            //             { pageObjs[0].lines.map((line) => {
+            //                 return <p style={pStyle}>{ line }</p>
+            //             })}
+            //         </div>
+            //     ]
+            // );
+            const tempObj = pageObjs.map((obj) => {
+                return (
+                    <div style={divStyle}>
+                        { obj.lines.map((line) => {
+                            return <p style={pStyle}>{ encodeJsxRuby(line) }</p>
+                            // return <p style={pStyle}>{ line }</p>
+                        })}
+                    </div>
+                );
+            });
+            setJsxPageObjs(tempObj);
         }
     }
 
@@ -251,15 +272,13 @@ export const Scale = (props) => {
         // return getPages(linesUs);
     }, [linesUs]);
 
-    useMemo(() => {
-        console.log(pageObjs);
-    }, [pageObjs]);
-
     // padding-top はフォントの 0.6 倍、line-height は等倍でルビとルビなし行が同じ高さになる
     const pStyle = {
         margin: "0",
-        padding: fontSize * 0.6 + "px 0 0",
-        lineHeight: "100%",
+        // padding: fontSize * 0.6 + "px 0 0",
+        // lineHeight: "100%",
+        padding: "0",
+        lineHeight: "200%",
         fontSize: fontSize + "px",
         fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
         textAlign: "left"
@@ -268,8 +287,39 @@ export const Scale = (props) => {
         width: maxWidth
     }
 
+    useMemo(() => {
+        console.log("pageObjs ---");
+        console.log(pageObjs);
+        // console.log("pageObjs[0].lines");
+        // console.log(pageObjs[0].lines);
+        // const tempObj = pageObjs.map((obj) => {
+        //     return (
+        //         <div style={divStyle}>
+        //             { obj.lines.map((line) => {
+        //                 return <p style={pStyle}>{ line }</p>
+        //             })}
+        //         </div>
+        //     );
+        // })
+        // console.log("tempObj");
+        // console.log(tempObj);
+        // setJsxPageObjs(
+        //     [
+        //         <div style={divStyle}>
+        //             { pageObjs[0].lines.map((line) => {
+        //                 return <p style={pStyle}>{ line }</p>
+        //             })}
+        //         </div>
+        //     ]
+        // );
+    }, [pageObjs]);
+
     return (
         <>
+            <div>
+                { jsxPageObjs }
+            </div>
+
             <div id={"scale"} style={divStyle}>
                 <p id={"scale_p"} style={pStyle}>
                     { scaleP }

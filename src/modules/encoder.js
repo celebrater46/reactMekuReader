@@ -7,9 +7,9 @@ const convertDot = (line) => {
         const chars = str.match(/《《[^》]+》》/);
         let converted = "";
         for(let j = 2; j < chars[0].length - 2; j++){ // match() returns not String but Array
-            converted += "<ruby><rb>";
+            converted += "｜";
             converted += chars[0].substr(j, 1);
-            converted += "</rb><rp>(</rp><rt>・</rt><rp>)</rp></ruby>";
+            converted += "《・》";
         }
         str = str.replace(/《《[^》]+》》/, converted);
         i++;
@@ -41,6 +41,7 @@ const convertDot = (line) => {
 // }
 
 const encodeJsxRuby = (line) => {
+    if(line === ""){ return "　"; }
     let array = [];
     let dotConverted = convertDot(line);
     let str = dotConverted.replace(/｜《/g, "《");
