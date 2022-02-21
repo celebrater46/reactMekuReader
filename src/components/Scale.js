@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Page} from "../modules/Page";
+import {encodeJsxRuby} from "../modules/encoder";
 
 export const Scale = (props) => {
     const novelId = 1;
@@ -39,86 +40,53 @@ export const Scale = (props) => {
 
     const getIndexOfLineBreak = (line, remainLines) => {
         const maxHeight = rubyLineHeight * remainLines;
-        console.log("maxHeight: " + maxHeight);
+        // console.log("maxHeight: " + maxHeight);
+        // console.log("maxWidth: " + maxWidth);
         let str = line;
         let num = 0;
-        // let sumWidth = 0;
-        let sumHeight = 0;
-        while(str.length > maxChars && sumHeight <= maxHeight){
+        let sumHeight = rubyLineHeight;
+        while(str.length > maxChars){
             let rubyChars = 0; // 行内にルビが存在した場合の補正値（改行したらリセット）
             const rubyIndex = str.indexOf("｜");
             console.log("rubyIndex: " + rubyIndex);
             if(rubyIndex > -1 && rubyIndex < maxChars + rubyChars){
                 const ruby = str.match(/｜([^《]+)《([^》]+)》/);
-                // console.log("ruby: " + ruby);
-                // let tempStr = ruby[0].replace("<ruby><rb>", "");
-                // tempStr = tempStr.replace("</rt><rp>)</rp></ruby>", "");
-                // const rprt = tempStr.split("</rb><rp>(</rp><rt>");
+                console.log("ruby:");
+                console.log(ruby);
                 const ratio = ruby[2].length / ruby[1].length; // 1-3: 1.5, 2-5: 2.5, 1-5: 2.5
                 const trueChars = ratio > 2 ? ruby[2].length / 2 : ruby[1].length;
-                // console.log("ratio: " + ratio);
                 console.log("trueChars: " + trueChars);
-                // const remainChars = trueChars - rprt[0].length;
-                // let addition = "";
-                // for(let i = 0; i < remainChars; i++){
-                //     addition += "🥺"; // pien
-                // }
-                // str = str.replace(ruby, rprt + addition);
-                num += ruby[0].length - trueChars;
                 const currentWidth = rubyIndex * fontSize + trueChars * fontSize;
                 if(currentWidth > maxWidth){
                     num += rubyIndex;
                     sumHeight += rubyLineHeight;
-                    // sumWidth = trueChars * fontSize;
-                    str = str.substr(rubyIndex);
-                    rubyChars = 0;
+                    if(sumHeight > maxHeight){
+                        return num;
+                    } else {
+                        str = str.substr(rubyIndex);
+                        rubyChars = 0;
+                    }
                 } else {
-                    rubyChars += ruby[0].length - trueChars;
-                    str = str.replace("｜", "‖");
+                    // ここにサラリーマンは｜存在しない《ノット・イクシスト》。
+                    num += ruby[0].length - trueChars;
+                    // rubyChars += ruby[0].length - trueChars;
+                    let checked = "";
+                    for(let i = 0; i < trueChars; i++){
+                        checked += "‖"; // pien
+                    }
+                    str = str.replace(ruby[0], checked);
+                    // str = str.replace("｜", "‖");
                 }
             } else {
                 num += maxChars + rubyChars;
                 sumHeight += rubyLineHeight;
-                // sumWidth = 0;
-                str = str.substr(maxChars);
-                rubyChars = 0;
+                if(sumHeight > maxHeight){
+                    return num;
+                } else {
+                    str = str.substr(maxChars);
+                    rubyChars = 0;
+                }
             }
-            if(sumHeight > maxHeight){
-                console.log("returns!");
-                return num;
-                // break;
-            }
-            // if(str.substr(num, 6) === "<ruby>") {
-            //     // ルビタグの抽出
-            //     const ruby = str.match(/<ruby><rb>([^\x01-\x7E]+)<\/rb><rp>\(<\/rp><rt>([^\x01-\x7E]+)<\/rt><rp>\)<\/rp><\/ruby>/);
-            //     let tempStr = ruby.replace("<ruby><rb>", "");
-            //     tempStr = tempStr.replace("</rt><rp>)</rp></ruby>", "");
-            //     const rprt = tempStr.split("</rb><rp>(</rp><rt>");
-            //     const trueChars = Math.ceil(rprt[1].length / rprt[0].length); // オーバーサイズルビの幅（漢字文字数値）
-            //     sumWidth += trueChars * maxChars;
-            //     // setScaleP2(scaleP2 + ruby);
-            //     if(sumWidth > maxWidth){
-            //         sumHeight += rubyLineHeight;
-            //         sumWidth = trueChars * maxChars;
-            //     }
-            //     if(sumHeight > maxHeight){
-            //         console.log("divRef2.current.innerHTML");
-            //         console.log(divRef2.current.innerHTML);
-            //         return Math.floor(num);
-            //     } else {
-            //         num += ruby[0].length; // 本来一文字先に進むところを、ルビならルビタグ全体分進める
-            //     }
-            //     str = str.replace("<ruby>", "<xxxx>"); // 現在のルビタグの無効化
-            // } else {
-            //     setScaleP2(scaleP2 + str.substr(num, 1));
-            //     if(divRef2.current.clientHeight > maxHeight){
-            //         console.log("divRef2.current.innerHTML");
-            //         console.log(divRef2.current.innerHTML);
-            //         return Math.floor(num);
-            //     } else {
-            //         num++;
-            //     }
-            // }
             if(num > 5000){
                 console.log("endless loop occurred")
                 return -1; // 無限ループエラー対策
@@ -335,16 +303,27 @@ export const Scale = (props) => {
     //     }
     // }
     //
-    const testLine = "　勤務先は大手家電量販店ビックリカメラ｜六出那《ろくでな》支店。無論、正社員などではない。ここに｜《サラリーマン》は｜存在しない《ノット・イクシスト》。会社の都合でいつでも｜馘首《クビ》にされる百円ライターさながらの使い捨て｜非正規社員《イレギュラー》である。";
+    const testLine = "　勤務先は大手家電量販店ビックリカメラ｜六出那《ろくでなろくでなろくでななな》支店。無論、正社員などではない。ここに《サラリーマン》は｜存在しない《ノット・イクシスト》。会社の都合でいつでも｜馘首《クビ》にされる百円ライターさながらの使い捨て｜非正規社員《イレギュラー》である。";
+    const testLine2 = "　さらに｜齢《よわい》二十三にもなる息子の行動のすべてを刑務所の看守もどん引きするレベルで監視してくる、いわゆる過干渉型の｜毒母《どくはは》であり、腕っぷしも立つ分反抗すら困難を極めるというまるでフィクションのような悪の権化だ。";
 
     useMemo(() => {
         // console.log("lines:");
         // console.log(linesUs);
         // console.log(calcPWidth(encodeRuby(testLine)));
-        // console.log(getIndexOfLineBreak(encodeRuby(testLine), 1));
-        const array = separateFinalLine(testLine, 1);
-        setScaleP(<p>{array[0]}</p>);
-        setScaleP2(<p>{array[1]}</p>);
+        // console.log(getIndexOfLineBreak(testLine, 1));
+        const array = separateFinalLine(testLine, 2);
+        console.log("array:");
+        console.log(array);
+        const jsx1 = encodeJsxRuby(array[0]);
+        console.log("jsx1: ");
+        console.log(jsx1);
+        const jsx2 = encodeJsxRuby(array[1]);
+        console.log("jsx2: ");
+        console.log(jsx2);
+        setScaleP(<p>{ jsx1 }</p>);
+        setScaleP2(<p>{ jsx2 }</p>);
+        // setScaleP(<p>{array[0]}</p>);
+        // setScaleP2(<p>{array[1]}</p>);
         // return getPages(linesUs);
     }, [linesUs]);
 
@@ -354,6 +333,8 @@ export const Scale = (props) => {
         padding: fontSize * 0.6 + "px 0 0",
         lineHeight: "100%",
         fontSize: fontSize + "px",
+        fontFamily: "Kosugi, Noto Serif JP, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
+        textAlign: "left"
     }
     const divStyle = {
         width: maxWidth

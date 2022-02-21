@@ -48,7 +48,8 @@ const encodeJsxRuby = (line) => {
     // const escaped = dotConverted.replace(/｜《([^》]+)》/g, "≪$1≫");
     let i = 0;
     while(str.length > -1){
-        let rubyIndex = str.indexOf("｜");
+        // let rubyIndex = str.indexOf("｜");
+        let rubyIndex = str.search(/｜([^《]+)《([^》]+)》/);
         if(rubyIndex > -1){
             // if(str.substr(rubyIndex + 1, 1) === "《"){
             //

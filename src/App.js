@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Ajax from "./components/Ajax";
 import {NoAjax} from "./components/NoAjax";
-// import {Scale} from "./components/Scale";
+import {Scale} from "./components/Scale";
 import {Test} from "./components/Test";
 
 function App() {
@@ -21,8 +21,8 @@ function App() {
         {/*>*/}
         {/*  Learn React*/}
         {/*</a>*/}
-        {/*  <Scale />*/}
-          <Test />
+          <Scale />
+          {/*<Test />*/}
       </header>
     </div>
   );
