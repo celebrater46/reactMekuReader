@@ -9,8 +9,10 @@ export const Scale = (props) => {
     const [linesUs, setLinesUs] = useState([]); // lines Use State
     const [pageObjs, setPageObjs] = useState([]);
     const [jsxPageObjs, setJsxPageObjs] = useState([]);
-    const maxWidth = 600;
-    const maxHeight = window.innerHeight * 0.8;
+    const maxHeight = 600;
+    const maxWidth = window.innerHeight * 0.8;
+    // const maxWidth = 600;
+    // const maxHeight = window.innerHeight * 0.8;
     // console.log(maxHeight)
     const [scaleP, setScaleP] = useState([<ruby><rb>試験</rb><rp>（</rp><rt>テスト</rt><rp>）</rp></ruby>]);
     const [scaleP2, setScaleP2] = useState("テスト２");
@@ -199,7 +201,9 @@ export const Scale = (props) => {
                 const array = separateFinalLine(str, 1);
                 // console.log("array");
                 // console.log(array);
-                if(array[1] !== null){
+                if(array[1] === null){
+                    break;
+                } else {
                     str = array[1];
                 }
             } else {
@@ -221,32 +225,40 @@ export const Scale = (props) => {
         let page = new Page(i);
         // let lines = encodeRuby(remainText).split("\n");
         let lines = remainLines;
-        console.log("lines");
-        console.log(lines);
+        // console.log("lines");
+        // console.log(lines);
         let finalLine = 0;
         // console.log("lines")
         // console.log("currentHeight: " + currentHeight);
         // console.log("maxHeight: " + maxHeight);
-        let currentHeight = rubyLineHeight;
+        let sumHeight = rubyLineHeight;
+        let pHeight = 0;
+        let testI = 0;
         for(let j = 0; j < lines.length; j++){
             // if(divRef.current.clientHeight < maxHeight){
-            if(currentHeight < maxHeight){
+            if(sumHeight < maxHeight){
                 const key = "line-" + i + "_" + j;
                 // const p = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
                 page.lines.push(lines[j]);
-                const pHeight = calcPHeight(lines[j]);
-                console.log("lines[j]: '" + lines[j] + "'");
-                console.log("pHeight: " + pHeight);
-                currentHeight += pHeight;
+                pHeight = calcPHeight(lines[j]);
+                // console.log("lines[j]: '" + lines[j] + "'");
+                // console.log("pHeight: " + pHeight);
+                sumHeight += pHeight;
                 // page.lines[j] = <p key={key} id={key} style={pStyle}>{ lines[j] }</p>;
                 // setScaleP(scaleP.push(p));
                 // page.lines.push(lines[j]);
                 // console.log("page.lines.pushed");
                 // console.log(page.lines);
                 // console.log("currentHeight: " + currentHeight);
+                testI++;
             } else {
+                // console.log("testI: " + testI);
+                // console.log("currentHeight: " + currentHeight);
+                // console.log("maxHeight: " + maxHeight);
                 if(finalLine === 0){
+                    sumHeight -= pHeight;
                     finalLine = j - 1;
+                    break;
                 }
             }
         }
@@ -254,12 +266,15 @@ export const Scale = (props) => {
         if(finalLine > 0){
             // setScaleP(scaleP.pop());
             page.lines.pop();
-            const remainHeight = maxHeight - currentHeight;
+            const remainHeight = maxHeight - sumHeight;
             let newLines = lines.slice(finalLine + 1);
+            console.log("remainHeight: " + remainHeight);
             if(remainHeight >= rubyLineHeight){
+                const remainLines = Math.floor(remainHeight / rubyLineHeight);
+                // console.log("remainLines: " + remainLines);
                 const array = separateFinalLine(
                     lines[finalLine],
-                    Math.floor(remainHeight / rubyLineHeight)
+                    remainLines
                 );
                 // const additionalArray = getAdditionalStr(remainHeight, array);
                 page.lines.push(array[0]);
@@ -361,9 +376,13 @@ export const Scale = (props) => {
         textAlign: "left"
     }
     const divStyle = {
-        width: maxWidth,
+        width: maxHeight,
+        height: maxWidth,
+        // width: maxWidth,
+        // height: maxHeight,
         backgroundColor: "#000",
-        margin: "20px"
+        margin: "20px",
+        writingMode: "vertical-rl"
     }
 
     useMemo(() => {
