@@ -2,8 +2,9 @@ import logo from './logo.svg';
 import './App.css';
 import Ajax from "./components/Ajax";
 import {NoAjax} from "./components/NoAjax";
-import {Scale} from "./components/Scale";
+import {Scale} from "./oldFiles/Scale4.js.old";
 import {Test} from "./components/Test";
+import {Pages} from "./components/Pages";
 
 function App() {
   return (
@@ -21,8 +22,9 @@ function App() {
         {/*>*/}
         {/*  Learn React*/}
         {/*</a>*/}
-        {/*  <Scale />*/}
-          <Test />
+        {/*  <Scale4Js />*/}
+        {/*  <Test />*/}
+          <Pages />
       </header>
     </div>
   );

@@ -3,7 +3,7 @@ import {getNovels} from "../novels/novelController";
 import {encodeRuby} from "../modules/encoder";
 import {Page} from "../modules/Page";
 
-export const Scale = (props) => {
+export const Scale4Js = (props) => {
     const novelId = 1;
     const epId = 1;
     const [linesUs, setLinesUs] = useState([]); // lines Use State

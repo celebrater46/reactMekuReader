@@ -3,7 +3,7 @@ import {HiddenButton} from "./HiddenButton";
 import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
-import {Scale} from "./Scale";
+import {Scale} from "../oldFiles/Scale4.js.old";
 import {Library} from "./Library";
 import {getNovels} from "../novels/novelController";
 
