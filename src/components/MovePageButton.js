@@ -1,9 +1,9 @@
 import React, {useMemo, useState} from "react";
 
 export const MovePageButton = (props) => {
-    const [pageNum, setPageNum] = useState(1);
     const xy = props.xy;
-    const max = 5;
+    const maxPage = props.maxPage;
+    const [pageNum, setPageNum] = useState(1);
     const style = {
         opacity: 0.2,
         backgroundColor: "white",
@@ -20,31 +20,32 @@ export const MovePageButton = (props) => {
         right: "2vw",
     }
     const clickLeft = () => {
+        setPageNum(pageNum < maxPage ? pageNum + 1 : pageNum);
+        console.log("clicked right");
+    }
+
+    const clickRight = () => {
         setPageNum(pageNum > 1 ? pageNum - 1 : pageNum);
         console.log("clicked left");
-    }
-    const clickRight = () => {
-        setPageNum(pageNum < max ? pageNum + 1 : pageNum);
-        console.log("clicked right");
     }
     const getLocation = () => {
         if(xy === "horizontal-tb"){
             return (pageNum - 1) * window.innerWidth;
         } else {
-            return (max - pageNum + 1) * window.innerWidth;
+            return (maxPage - pageNum + 1) * window.innerWidth;
             // 1-5 2-4 3-3 4-2 5-1
         }
     }
     useMemo(() => {
         window.scrollTo({
-            left: (pageNum - 1) * window.innerWidth,
+            left: (maxPage - pageNum) * window.innerWidth,
             behavior: 'smooth'
         });
         console.log("pageNum: " + pageNum);
     }, [pageNum]);
-    useMemo(() => {
-        setPageNum(max - pageNum + 1);
-    }, [xy]);
+    // useMemo(() => {
+    //     setPageNum(maxPage - pageNum + 1);
+    // }, [xy]);
 
     return (
         <>

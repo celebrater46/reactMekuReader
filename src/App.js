@@ -5,6 +5,7 @@ import {NoAjax} from "./components/NoAjax";
 import {Scale} from "./oldFiles/Scale4.js.old";
 import {Test} from "./components/Test";
 import {Pages} from "./components/Pages";
+import {Container} from "./components/Container";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
         {/*</a>*/}
         {/*  <Scale4Js />*/}
         {/*  <Test />*/}
-          <Pages />
+        {/*  <Pages />*/}
+          <Container />
       </header>
     </div>
   );

@@ -3,7 +3,7 @@ import {HiddenButton} from "./HiddenButton";
 import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
-import {Scale} from "../oldFiles/Scale4.js.old";
+// import {Scale} from "../oldFiles/Scale4.js.old";
 import {Library} from "./Library";
 import {getNovels} from "../novels/novelController";
 
@@ -14,7 +14,9 @@ export const Container = () => {
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
-    const [xy, setXy] = useState("horizontal-tb");
+    // const [xy, setXy] = useState("horizontal-tb");
+    const [xy, setXy] = useState("vertical-rl");
+    const [maxPage, setMaxPage] = useState(12);
 
     const fontSizeNum = useMemo(() => {
         switch (size){
@@ -41,10 +43,10 @@ export const Container = () => {
             default: return "white";
         }
     }, [color]);
-    const direction = useMemo(() => {
-        console.log(xy === "horizontal-tb" ? "row" : "row-reverse");
-        return xy === "horizontal-tb" ? "row" : "row-reverse";
-    }, [xy]);
+    // const direction = useMemo(() => {
+    //     console.log(xy === "horizontal-tb" ? "row" : "row-reverse");
+    //     return xy === "horizontal-tb" ? "row" : "row-reverse";
+    // }, [xy]);
     const clickedTitle = (id) => {
         setNovelId(id);
     }
@@ -60,17 +62,21 @@ export const Container = () => {
     const changeXy = (e) => {
         setXy(e.target.value);
     }
+    const initMaxPage = (num) => {
+        setMaxPage(num);
+    }
     const div = {
         backgroundColor: "black",
         color: "silver",
-        width: "501vw",
-        height: "90%",
+        width: maxPage * 100 + "vw",
+        height: "94%",
         margin: "0",
-        padding: "5% 0",
+        padding: "3% 0",
         fontFamily: family,
         fontSize: fontSizeNum,
         display: "flex",
-        flexDirection: direction,
+        // flexDirection: direction,
+        flexDirection: "row-reverse",
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexWrap: "nowrap",
@@ -92,7 +98,7 @@ export const Container = () => {
         <div style={div}>
             <p style={p}>{parameter}</p>
             {/*<HiddenButton xy={xy} type={"top"} width={"96vw"} height={"18vh"} right={"2vw"} top={"2vh"}/>*/}
-            <MovePageButton xy={xy} />
+            <MovePageButton xy={xy} maxPage={maxPage} />
             {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             <Pages
                 fColor={fColor}
@@ -100,18 +106,19 @@ export const Container = () => {
                 xy={xy}
                 novelId={novelId}
                 epId={epId}
+                setMaxPage={(num) => setMaxPage(num)}
             />
             <ControlPanel
                 family={family}
                 size={size}
                 color={color}
                 xy={xy}
+                maxPage={maxPage}
                 changeFamily={(e) => changeFamily(e)}
                 changeSize={(e) => changeSize(e)}
                 changeColor={(e) => changeColor(e)}
                 changeXy={(e) => changeXy(e)}
             />
-            <Scale />
             <Library clickedTitle={(id) => clickedTitle(id)} />
         </div>
     );

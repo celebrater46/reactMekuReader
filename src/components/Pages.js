@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {getNovels} from "../novels/novelController";
-import {encodeRuby} from "../modules/encoder";
+import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
 // import {getPagesJs} from "../modules/getPagesJs";
 import {Page} from "../modules/Page";
 import {Episode} from "../modules/Episode";
@@ -10,20 +10,24 @@ export const Pages = (props) => {
     const epId = props.epId;
     const [jsxPages, setJsxPages] = useState([<p>テスト</p>]);
     const fontSize = 20;
-    const maxWidth = window.innerHeight * 0.8;
-    const maxHeight = 600;
+    const maxWidth = 600;
+    const maxHeight = window.innerHeight * 0.8;
     let num = 0;
+
+    const setMaxPage = (num) => {
+        return props.setMaxPage(num);
+    }
     // const pageObjs = (async() => {
     useEffect(async() => {
         if(num > 1000){
             console.log("endless loop occurred");
             return null;
         } else {
-            const lines = getNovels(1, 1).split("\n");
+            const lines = getNovels(2, 1).split("\n");
             console.log("await new Episode(1).getPages(lines)");
             num++;
             console.log("num: " + num);
-            const episode = await new Episode(1, fontSize, maxWidth, maxHeight).getPages(lines);
+            const episode = await new Episode(1, fontSize, maxHeight, maxWidth).getPages(lines);
             console.log("episode:");
             console.log(episode);
             let pageNum = 0;
@@ -32,12 +36,25 @@ export const Pages = (props) => {
                 let lineNum = 0;
                 const linesP = page.lines.map((line) => {
                     lineNum++;
-                    return <p key={"line-" + lineNum} id={"line-" + lineNum} style={pStyle}>{ line }</p>;
+                    return (
+                        <p
+                            key={"line-" + lineNum}
+                            id={"line-" + lineNum}
+                            style={pStyle}
+                        >
+                            { encodeJsxRuby(line) }
+                        </p>);
                 });
                 return (
                     <div key={"outer-" + pageNum} style={outerStyle}>
-                        <div key={"inner-" + pageNum} id={"p-" + pageNum} style={innerStyle}>
-                            { linesP }
+                        <div key={"inner-" + pageNum} style={innerStyle}>
+                            <div
+                                key={"inner2-" + pageNum}
+                                // style={ innerStyle2 }
+                                style={ pageNum === episode.length ? innerStyle2Last : innerStyle2 }
+                            >
+                                { linesP }
+                            </div>
                         </div>
                     </div>
                 );
@@ -45,6 +62,7 @@ export const Pages = (props) => {
             console.log("pages:");
             console.log(pages);
             setJsxPages(pages);
+            setMaxPage(episode.length);
         }
     }, []);
 
@@ -61,25 +79,40 @@ export const Pages = (props) => {
 
     const outerStyle = {
         backgroundColor: bgColor,
-        margin: "20px " + ((windowWidth - maxWidth + 100) / 2) + "px",
-        padding: "50px",
-        width: "700px",
-        height: "70vh",
+        flexBasis: "700px",
+        // width: "700px",
+        margin: "20px " + ((windowWidth - maxWidth - 100) / 2) + "px",
+        // margin: "20px",
+        padding: "50px 0",
+        display: "block",
+        // justifyContent: "center",
+        // alignItems: "center",
+        // height: "70vh",
     }
     const innerStyle = {
         color: fColor,
-        textAlign: "justify",
+        textAlign: "center",
+        verticalAlign: "middle",
         // writingMode: xy,
         // margin: innerMargin,
-        margin: "0 0 0 auto",
-        width: maxHeight,
-        height: maxWidth,
+        // margin: "auto",
+        width: maxWidth + 100 + "px",
+        height: maxHeight,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         // width: maxWidth,
         // height: maxHeight,
-        backgroundColor: "#000",
+        // backgroundColor: "#000",
         // margin: "20px",
         writingMode: "vertical-rl"
     };
+    const innerStyle2 = {
+        margin: "0 auto"
+    }
+    const innerStyle2Last = {
+        margin: "0 40px 0 auto"
+    }
     const pStyle = {
         margin: "0",
         // padding: fontSize * 0.6 + "px 0 0",
@@ -90,6 +123,12 @@ export const Pages = (props) => {
         fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
         textAlign: "left"
     }
+
+    // const getInnerStyle = () => {
+    //     if(pageNum !== undefined){
+    //         return
+    //     }
+    // }
     // const divStyle = {
     //     width: maxHeight,
     //     height: maxWidth,
