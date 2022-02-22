@@ -21,8 +21,8 @@ function App() {
         {/*>*/}
         {/*  Learn React*/}
         {/*</a>*/}
-          <Scale />
-          {/*<Test />*/}
+        {/*  <Scale />*/}
+          <Test />
       </header>
     </div>
   );

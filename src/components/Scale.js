@@ -351,7 +351,7 @@ export const Scale = (props) => {
         // console.log(jsx2);
         // setScaleP(<p>{ jsx1 }</p>);
         // setScaleP2(<p>{ jsx2 }</p>);
-        const testEpisode = getNovels(1, 1).split("\n");
+        const testEpisode = getNovels(2, 1).split("\n");
         const escapeLineHasNoChar = testEpisode.map((line) => {
             return line === "" ? "　" : line;
         });
