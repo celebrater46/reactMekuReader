@@ -1,15 +1,15 @@
 import {Page} from "./Page";
 
 export class Episode {
-    constructor(num) {
+    constructor(num, font, width, height) {
         this.id = num;
         // this.Pages = [];
         this.lines = [];
         this.pageObjs = [];
         // this.jsxPageObjs = [];
-        this.maxHeight = 600;
-        this.maxWidth = window.innerHeight * 0.8;
-        this.fontSize = 20; // px
+        this.maxWidth = width;
+        this.maxHeight = height;
+        this.fontSize = font; // px
         this.rubyLineHeight = this.fontSize * 2; // px
         this.maxChars = Math.floor(this.maxWidth / this.fontSize);
         this.i = 0;
@@ -235,6 +235,10 @@ export class Episode {
         this.remains = await this.createPage(this.i, lines);
         if(this.remains.length > 0){
             this.i++;
+            if(this.i > 1000){
+                console.log("endless loop occurred");
+                return null;
+            }
             return await this.getPages(this.remains);
         } else {
             return this.pageObjs;
