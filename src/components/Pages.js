@@ -1,8 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {getNovels} from "../novels/novelController";
 import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
-// import {getPagesJs} from "../modules/getPagesJs";
-import {Page} from "../modules/Page";
 import {Episode} from "../modules/Episode";
 
 export const Pages = (props) => {
@@ -14,22 +12,21 @@ export const Pages = (props) => {
     const maxHeight = window.innerHeight * 0.8;
     let num = 0;
 
-    const setMaxPage = (num) => {
-        return props.setMaxPage(num);
+    const initMaxPage = (num) => {
+        return props.initMaxPage(num);
     }
-    // const pageObjs = (async() => {
     useEffect(async() => {
         if(num > 1000){
             console.log("endless loop occurred");
             return null;
         } else {
             const lines = getNovels(2, 1).split("\n");
-            console.log("await new Episode(1).getPages(lines)");
+            // console.log("await new Episode(1).getPages(lines)");
             num++;
-            console.log("num: " + num);
+            // console.log("num: " + num);
             const episode = await new Episode(1, fontSize, maxHeight, maxWidth).getPages(lines);
-            console.log("episode:");
-            console.log(episode);
+            // console.log("episode:");
+            // console.log(episode);
             let pageNum = 0;
             const pages = episode.map((page) => {
                 pageNum++;
@@ -50,7 +47,6 @@ export const Pages = (props) => {
                         <div key={"inner-" + pageNum} style={innerStyle}>
                             <div
                                 key={"inner2-" + pageNum}
-                                // style={ innerStyle2 }
                                 style={ pageNum === episode.length ? innerStyle2Last : innerStyle2 }
                             >
                                 { linesP }
@@ -59,13 +55,12 @@ export const Pages = (props) => {
                     </div>
                 );
             });
-            console.log("pages:");
-            console.log(pages);
+            // console.log("pages:");
+            // console.log(pages);
             setJsxPages(pages);
-            setMaxPage(episode.length);
+            initMaxPage(episode.length);
         }
     }, []);
-
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -73,38 +68,26 @@ export const Pages = (props) => {
     const bgColor = props.bgColor;
     const xy = props.xy;
 
-    const innerMargin = useMemo(() => {
-        return xy === "horizontal-tb" ? "0 auto 0 0" : "0 0 0 auto";
-    }, [xy]);
+    // const innerMargin = useMemo(() => {
+    //     return xy === "horizontal-tb" ? "0 auto 0 0" : "0 0 0 auto";
+    // }, [xy]);
 
     const outerStyle = {
         backgroundColor: bgColor,
         flexBasis: "700px",
-        // width: "700px",
         margin: "20px " + ((windowWidth - maxWidth - 100) / 2) + "px",
-        // margin: "20px",
         padding: "50px 0",
         display: "block",
-        // justifyContent: "center",
-        // alignItems: "center",
-        // height: "70vh",
     }
     const innerStyle = {
         color: fColor,
         textAlign: "center",
         verticalAlign: "middle",
-        // writingMode: xy,
-        // margin: innerMargin,
-        // margin: "auto",
         width: maxWidth + 100 + "px",
         height: maxHeight,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // width: maxWidth,
-        // height: maxHeight,
-        // backgroundColor: "#000",
-        // margin: "20px",
         writingMode: "vertical-rl"
     };
     const innerStyle2 = {
@@ -115,29 +98,12 @@ export const Pages = (props) => {
     }
     const pStyle = {
         margin: "0",
-        // padding: fontSize * 0.6 + "px 0 0",
-        // lineHeight: "100%",
         padding: "0",
         lineHeight: "200%",
         fontSize: fontSize + "px",
         fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
         textAlign: "left"
     }
-
-    // const getInnerStyle = () => {
-    //     if(pageNum !== undefined){
-    //         return
-    //     }
-    // }
-    // const divStyle = {
-    //     width: maxHeight,
-    //     height: maxWidth,
-    //     // width: maxWidth,
-    //     // height: maxHeight,
-    //     backgroundColor: "#000",
-    //     margin: "20px",
-    //     writingMode: "vertical-rl"
-    // }
 
     window.addEventListener('resize', () => {
         console.log('resized window');

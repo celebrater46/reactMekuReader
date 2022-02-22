@@ -3,10 +3,8 @@ import {Page} from "./Page";
 export class Episode {
     constructor(num, font, width, height) {
         this.id = num;
-        // this.Pages = [];
         this.lines = [];
         this.pageObjs = [];
-        // this.jsxPageObjs = [];
         this.maxWidth = width;
         this.maxHeight = height;
         this.fontSize = font; // px
@@ -221,7 +219,7 @@ export class Episode {
                         newLines.unshift(array[1]);
                     }
                 }
-                console.log(page);
+                // console.log(page);
                 this.pageObjs.push(page);
                 resolve(newLines);
             } else {

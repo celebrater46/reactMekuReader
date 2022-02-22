@@ -1,20 +1,15 @@
 import React, {useMemo, useState} from "react";
-import {HiddenButton} from "./HiddenButton";
 import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
-// import {Scale} from "../oldFiles/Scale4.js.old";
 import {Library} from "./Library";
-import {getNovels} from "../novels/novelController";
 
 export const Container = () => {
-    // const [isLibrary, setIsLibrary] = useState(true);
     const [novelId, setNovelId] = useState(1);
     const [epId, setEpId] = useState(0);
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
-    // const [xy, setXy] = useState("horizontal-tb");
     const [xy, setXy] = useState("vertical-rl");
     const [maxPage, setMaxPage] = useState(12);
 
@@ -106,7 +101,7 @@ export const Container = () => {
                 xy={xy}
                 novelId={novelId}
                 epId={epId}
-                setMaxPage={(num) => setMaxPage(num)}
+                initMaxPage={(num) => initMaxPage(num)}
             />
             <ControlPanel
                 family={family}
