@@ -30,7 +30,9 @@ export const Slider = (props) => {
     const sliderStyle = {
         width: "80vw",
         background: "black",
-        margin: "10px auto"
+        margin: "10px auto",
+        transform: "scale(-1, 1)"
+        // transform: "rotate(180deg)",
     }
     const pStyle = {
         width: "80px",
@@ -44,7 +46,7 @@ export const Slider = (props) => {
         setY(y === "0" ? "-30vh" : "0");
     }
     const onChangeSlider = (e) => {
-        return props.onChangeSlider(maxPage - e.target.value + 1);
+        return props.onChangeSlider(e.target.value);
     }
 
     return (
@@ -59,7 +61,7 @@ export const Slider = (props) => {
                     step={1}
                     max={ maxPage }
                     style={sliderStyle}
-                    value={maxPage - currentPage + 1}
+                    value={currentPage}
                     onChange={onChangeSlider}
                 />
             </div>
