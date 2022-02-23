@@ -71,39 +71,68 @@ export const Pages = (props) => {
     //     return sum;
     // }
 
-    useEffect(() => {
-        if(num > 1000){
-            console.log("endless loop occurred");
-            return null;
-        } else {
-            const novelObj = getNovels(novelId);
-            const novel = new Novel(novelId, novelObj.title);
-            let pageSum = 0;
-            novelObj.list.map(async(line) => {
-                num++;
-                const array = line.split("|");
-                const episode =
-                    await new Episode(num, array[2], fontSize, maxHeight, maxWidth)
-                    .getPages(novelObj.texts[num - 1]);
-                pageSum += episode.pagesDivs.length;
-                // return episode;
-                novel.episodes.push(episode);
-            });
-            // const lines = getNovels(2, 1).split("\n");
-            // console.log("await new Episode(1).getPages(lines)");
-            // console.log("num: " + num);
-            // const episode = await new Episode(1, title, fontSize, maxHeight, maxWidth).getPages(lines);
-            // console.log("episode:");
-            // console.log(episode);
-            console.log("novel:");
-            console.log(novel);
-            const pages = getAllEpisodesJsx(novel);
-            // console.log("pages:");
-            // console.log(pages);
-            console.log("pageSum: " + pageSum);
-            setJsxPages(pages);
-            initMaxPage(pageSum);
-        }
+    const asyncReturn = (obj) => {
+        return new Promise((resolve, reject)=> {
+            // let episodes = [];
+            // for(let i = 0; i < obj.list.length; i++){
+            //
+            // }
+            // resolve(
+                const pageObjs = obj.list.map(async(line) => {
+                    // console.log("line:" + line);
+                    num++;
+                    const array = line.split("|");
+                    let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
+                    const pageObj = await episode.getPages(obj.texts[num - 1]);
+                    // pageSum += pageObjs.length;
+                    // return episode;
+                    // console.log("pageObj:");
+                    // console.log(pageObj);
+                    console.log("episode");
+                    console.log(episode);
+                    // novel.episodes.push(episode);
+                    // novel.addEpisode(episode);
+                    // novel.episodes.push(pageObjs);
+                    // console.log("novel:");
+                    // console.log(novel);
+                    // return pageObjs;
+                    return episode;
+                })
+            // );
+            // resolve(episodes);
+            console.log("pageObjs");
+            console.log(pageObjs);
+        // novel.episodes.concat(episodes);
+        // resolve({ obj: novel, sum: pageSum });
+    })};
+
+    const getNovelObj = async(obj) => {
+        return await asyncReturn(obj);
+    }
+
+    useEffect(async() => {
+        const novelObj = getNovels(novelId);
+        // const novel = new Novel(novelId, novelObj.title);
+        let pageSum = 0;
+        const episodes = await getNovelObj(novelObj);
+        // console.log("novelObj");
+        // console.log(novelObj);
+
+        // const lines = getNovels(2, 1).split("\n");
+        // console.log("await new Episode(1).getPages(lines)");
+        // console.log("num: " + num);
+        // const episode = await new Episode(1, title, fontSize, maxHeight, maxWidth).getPages(lines);
+        console.log("episodes:");
+        console.log(episodes);
+        // const novel = await getNovelObj();
+        // const pages = getAllEpisodesJsx(novel.obj);
+        // console.log("pages:");
+        // console.log(pages);
+        // console.log("novel");
+        // console.log(novel);
+        // console.log("novel.sum: " + novel.sum);
+        // setJsxPages(pages);
+        // initMaxPage(novel.sum);
     }, []);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
