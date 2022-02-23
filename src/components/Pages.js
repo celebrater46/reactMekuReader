@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {getNovels} from "../novels/novelController";
 import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
 import {Episode} from "../modules/Episode";
+import {Novel} from "../modules/Novel";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
@@ -15,50 +16,87 @@ export const Pages = (props) => {
     const initMaxPage = (num) => {
         return props.initMaxPage(num);
     }
-    useEffect(async() => {
+
+    const getLinesJsx = (lines) => {
+        let lineNum = 0;
+        return lines.map((line) => {
+            lineNum++;
+            return (
+                <p
+                    key={"line-" + lineNum}
+                    id={"line-" + lineNum}
+                    style={pStyle}
+                >
+                    { encodeJsxRuby(line) }
+                </p>);
+        });
+    }
+
+    const getEpisodeJsx = (pages) => {
+        let pageNum = 0;
+        return pages.map((page) => {
+            pageNum++;
+            const linesP = getLinesJsx(page.lines);
+            return (
+                <div key={"outer-" + pageNum} style={outerStyle}>
+                    <div key={"inner-" + pageNum} style={innerStyle}>
+                        <div
+                            key={"inner2-" + pageNum}
+                            style={ pageNum === pages.length ? innerStyle2Last : innerStyle2 }
+                        >
+                            { linesP }
+                        </div>
+                    </div>
+                </div>
+            );
+        });
+    }
+
+    const getAllEpisodesJsx = (novel) => {
+        let epNum = 0;
+        return novel.episodes.map((ep) => {
+            epNum++;
+            const pagesDivs = getEpisodeJsx(ep.pageObjs);
+            return { pagesDivs };
+        })
+    }
+
+    const getMaxPage = (novel) => {
+        let sum = 0;
+        novel.episodes.map((ep) => {
+            ep.pageObjs.map(() => {
+                sum++;
+            })
+        });
+        return sum;
+    }
+
+    useEffect(() => {
         if(num > 1000){
             console.log("endless loop occurred");
             return null;
         } else {
-            const lines = getNovels(2, 1).split("\n");
+            const lines = getNovels(novelId);
+            const novel = new Novel(novelId);
+            lines.list.map(async(line) => {
+                num++;
+                const array = line.split("|");
+                const episode =
+                    await new Episode(num, array[2], fontSize, maxHeight, maxWidth)
+                    .getPages(lines.texts[num - 1]);
+                novel.episodes.push(episode);
+            });
+            // const lines = getNovels(2, 1).split("\n");
             // console.log("await new Episode(1).getPages(lines)");
-            num++;
             // console.log("num: " + num);
-            const episode = await new Episode(1, fontSize, maxHeight, maxWidth).getPages(lines);
+            // const episode = await new Episode(1, title, fontSize, maxHeight, maxWidth).getPages(lines);
             // console.log("episode:");
             // console.log(episode);
-            let pageNum = 0;
-            const pages = episode.map((page) => {
-                pageNum++;
-                let lineNum = 0;
-                const linesP = page.lines.map((line) => {
-                    lineNum++;
-                    return (
-                        <p
-                            key={"line-" + lineNum}
-                            id={"line-" + lineNum}
-                            style={pStyle}
-                        >
-                            { encodeJsxRuby(line) }
-                        </p>);
-                });
-                return (
-                    <div key={"outer-" + pageNum} style={outerStyle}>
-                        <div key={"inner-" + pageNum} style={innerStyle}>
-                            <div
-                                key={"inner2-" + pageNum}
-                                style={ pageNum === episode.length ? innerStyle2Last : innerStyle2 }
-                            >
-                                { linesP }
-                            </div>
-                        </div>
-                    </div>
-                );
-            });
+            const pages = getAllEpisodesJsx(novel);
             // console.log("pages:");
             // console.log(pages);
             setJsxPages(pages);
-            initMaxPage(episode.length);
+            initMaxPage(getMaxPage(novel));
         }
     }, []);
 
