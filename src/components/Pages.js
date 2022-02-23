@@ -1,8 +1,8 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {getNovels} from "../novels/novelController";
 import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
-import {Episode} from "../modules/Episode";
-import {Novel} from "../modules/Novel";
+import {Episode} from "../classes/Episode";
+import {Novel} from "../classes/Novel";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
@@ -77,7 +77,7 @@ export const Pages = (props) => {
             return null;
         } else {
             const novelObj = getNovels(novelId);
-            const novel = new Novel(novelId);
+            const novel = new Novel(novelId, novelObj.title);
             let pageSum = 0;
             novelObj.list.map(async(line) => {
                 num++;
@@ -85,8 +85,9 @@ export const Pages = (props) => {
                 const episode =
                     await new Episode(num, array[2], fontSize, maxHeight, maxWidth)
                     .getPages(novelObj.texts[num - 1]);
-                novel.episodes.push(episode);
                 pageSum += episode.pagesDivs.length;
+                // return episode;
+                novel.episodes.push(episode);
             });
             // const lines = getNovels(2, 1).split("\n");
             // console.log("await new Episode(1).getPages(lines)");
@@ -94,9 +95,12 @@ export const Pages = (props) => {
             // const episode = await new Episode(1, title, fontSize, maxHeight, maxWidth).getPages(lines);
             // console.log("episode:");
             // console.log(episode);
+            console.log("novel:");
+            console.log(novel);
             const pages = getAllEpisodesJsx(novel);
             // console.log("pages:");
             // console.log(pages);
+            console.log("pageSum: " + pageSum);
             setJsxPages(pages);
             initMaxPage(pageSum);
         }

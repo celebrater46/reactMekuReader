@@ -27,21 +27,24 @@ export const getNovels = (novel) => {
             return text.replace(/｜《/g, "《");
         })
     }
-
+    const listLine = novelsList[novel - 1].split("|");
     switch (novel){
         case null: return novelsList;
         case 1:
             return {
+                title: listLine[0],
                 list: prisonList,
                 texts: escape(prisonTexts)
             }
         case 2:
             return {
+                title: listLine[0],
                 list: shiroganekiList,
                 texts: escape(shiroganekiTexts)
             }
         case 3:
             return {
+                title: listLine[0],
                 list: gokurakuList,
                 texts: escape(gokurakuTexts)
             }

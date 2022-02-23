@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Episode} from "../modules/Episode";
+import {Episode} from "../classes/Episode";
 import {getNovels} from "../novels/novelController";
 
 export const Test = () => {
