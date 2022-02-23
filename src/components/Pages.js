@@ -104,6 +104,10 @@ export const Pages = (props) => {
         fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
         textAlign: "left"
     }
+    const linkStyle = {
+        color: fColor,
+        writingMode: "vertical-rl"
+    }
 
     window.addEventListener('resize', () => {
         console.log('resized window');
@@ -112,7 +116,9 @@ export const Pages = (props) => {
 
     return (
         <>
+            <div style={linkStyle}>前のエピソードへ</div>
             { jsxPages }
+            <div style={linkStyle}>次のエピソードへ</div>
         </>
     );
 }

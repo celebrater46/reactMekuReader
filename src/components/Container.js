@@ -3,10 +3,12 @@ import {ControlPanel} from "./ControlPanel";
 import {Pages} from "./Pages";
 import {MovePageButton} from "./MovePageButton";
 import {Library} from "./Library";
+import {Slider} from "./Slider";
 
 export const Container = () => {
     const [novelId, setNovelId] = useState(1);
     const [epId, setEpId] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [family, setFamily] = useState('Noto Serif JP');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
@@ -30,12 +32,20 @@ export const Container = () => {
             default: return "#333";
         }
     }, [color]);
-    const bgColor = useMemo(() => {
+    const pageBgColor = useMemo(() => {
         switch (color){
             case "white": return "white";
             case "black": return "#333";
             case "beige": return "#fedcbb";
             default: return "white";
+        }
+    }, [color]);
+    const bgColor = useMemo(() => {
+        switch (color){
+            case "white": return "silver";
+            case "black": return "#000";
+            case "beige": return "#dcba99";
+            default: return "silver";
         }
     }, [color]);
     // const direction = useMemo(() => {
@@ -60,9 +70,12 @@ export const Container = () => {
     const initMaxPage = (num) => {
         setMaxPage(num);
     }
+    const onChangeSlider = (num) => {
+        setCurrentPage(num);
+    }
     const div = {
-        backgroundColor: "black",
-        color: "silver",
+        backgroundColor: bgColor,
+        color: fColor,
         width: maxPage * 100 + "vw",
         height: "94%",
         margin: "0",
@@ -93,14 +106,25 @@ export const Container = () => {
         <div style={div}>
             <p style={p}>{parameter}</p>
             {/*<HiddenButton xy={xy} type={"top"} width={"96vw"} height={"18vh"} right={"2vw"} top={"2vh"}/>*/}
-            <MovePageButton xy={xy} maxPage={maxPage} />
+            <MovePageButton
+                xy={xy}
+                maxPage={maxPage}
+                currentPage={currentPage}
+                onChangeSlider={(num) => onChangeSlider(num)}
+            />
+            <Slider
+                maxPage={maxPage}
+                currentPage={currentPage}
+                onChangeSlider={(num) => onChangeSlider(num)}
+            />
             {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             <Pages
                 fColor={fColor}
-                bgColor={bgColor}
+                bgColor={pageBgColor}
                 xy={xy}
                 novelId={novelId}
                 epId={epId}
+                currentPage={currentPage}
                 initMaxPage={(num) => initMaxPage(num)}
             />
             <ControlPanel

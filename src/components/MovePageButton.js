@@ -1,9 +1,9 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 
 export const MovePageButton = (props) => {
     const xy = props.xy;
     const maxPage = props.maxPage;
-    const [pageNum, setPageNum] = useState(1);
+    const currentPage = props.currentPage;
     const style = {
         opacity: 0.2,
         backgroundColor: "white",
@@ -19,30 +19,44 @@ export const MovePageButton = (props) => {
     const rightStyle = {
         right: "2vw",
     }
+    // const onChangeSlider = (e) => {
+    //     return props.onChangeSlider(maxPage - e.target.value + 1);
+    // }
     const clickLeft = () => {
-        setPageNum(pageNum < maxPage ? pageNum + 1 : pageNum);
         console.log("clicked right");
+        console.log("currentPage: " + currentPage);
+        console.log("maxPage: " + maxPage);
+        return props.onChangeSlider(currentPage < maxPage ? currentPage + 1 : currentPage);
+        // setCurrentPage(currentPage < maxPage ? currentPage + 1 : currentPage);
     }
 
     const clickRight = () => {
-        setPageNum(pageNum > 1 ? pageNum - 1 : pageNum);
         console.log("clicked left");
+        console.log("currentPage: " + currentPage);
+        console.log("maxPage: " + maxPage);
+        return props.onChangeSlider(currentPage > 1 ? currentPage - 1 : currentPage);
+        // setCurrentPage(currentPage > 1 ? currentPage - 1 : currentPage);
     }
     const getLocation = () => {
         if(xy === "horizontal-tb"){
-            return (pageNum - 1) * window.innerWidth;
+            return (currentPage - 1) * window.innerWidth;
         } else {
-            return (maxPage - pageNum + 1) * window.innerWidth;
+            return (maxPage - currentPage + 1) * window.innerWidth;
             // 1-5 2-4 3-3 4-2 5-1
         }
     }
-    useMemo(() => {
+    const scroll = () => {
         window.scrollTo({
-            left: (maxPage - pageNum) * window.innerWidth,
+            left: (maxPage - currentPage) * window.innerWidth,
             behavior: 'smooth'
         });
-        console.log("pageNum: " + pageNum);
-    }, [pageNum]);
+    }
+    useMemo(() => {
+        scroll();
+    }, [currentPage]);
+    useEffect(() => {
+        scroll();
+    }, []);
     // useMemo(() => {
     //     setPageNum(maxPage - pageNum + 1);
     // }, [xy]);
