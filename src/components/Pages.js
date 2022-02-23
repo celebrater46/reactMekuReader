@@ -61,30 +61,32 @@ export const Pages = (props) => {
         })
     }
 
-    const getMaxPage = (novel) => {
-        let sum = 0;
-        novel.episodes.map((ep) => {
-            ep.pageObjs.map(() => {
-                sum++;
-            })
-        });
-        return sum;
-    }
+    // const getMaxPage = (novel) => {
+    //     let sum = 0;
+    //     novel.episodes.map((ep) => {
+    //         ep.pageObjs.map(() => {
+    //             sum++;
+    //         })
+    //     });
+    //     return sum;
+    // }
 
     useEffect(() => {
         if(num > 1000){
             console.log("endless loop occurred");
             return null;
         } else {
-            const lines = getNovels(novelId);
+            const novelObj = getNovels(novelId);
             const novel = new Novel(novelId);
-            lines.list.map(async(line) => {
+            let pageSum = 0;
+            novelObj.list.map(async(line) => {
                 num++;
                 const array = line.split("|");
                 const episode =
                     await new Episode(num, array[2], fontSize, maxHeight, maxWidth)
-                    .getPages(lines.texts[num - 1]);
+                    .getPages(novelObj.texts[num - 1]);
                 novel.episodes.push(episode);
+                pageSum += episode.pagesDivs.length;
             });
             // const lines = getNovels(2, 1).split("\n");
             // console.log("await new Episode(1).getPages(lines)");
@@ -96,7 +98,7 @@ export const Pages = (props) => {
             // console.log("pages:");
             // console.log(pages);
             setJsxPages(pages);
-            initMaxPage(getMaxPage(novel));
+            initMaxPage(pageSum);
         }
     }, []);
 
