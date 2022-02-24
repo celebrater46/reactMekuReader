@@ -61,111 +61,20 @@ export const Pages = (props) => {
         })
     }
 
-    // const getMaxPage = (novel) => {
-    //     let sum = 0;
-    //     novel.episodes.map((ep) => {
-    //         ep.pageObjs.map(() => {
-    //             sum++;
-    //         })
-    //     });
-    //     return sum;
-    // }
-
-    // const asyncReturn = (obj) => {
-    //     return new Promise((resolve, reject)=> {
-    //         // let episodes = [];
-    //         // for(let i = 0; i < obj.list.length; i++){
-    //         //
-    //         // }
-    //         // resolve(
-    //             const pageObjs = obj.list.map(async(line) => {
-    //                 // console.log("line:" + line);
-    //                 num++;
-    //                 const array = line.split("|");
-    //                 let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
-    //                 const pageObj = await episode.getPages(obj.texts[num - 1]);
-    //                 // pageSum += pageObjs.length;
-    //                 // return episode;
-    //                 // console.log("pageObj:");
-    //                 // console.log(pageObj);
-    //                 console.log("episode");
-    //                 console.log(episode);
-    //                 // novel.episodes.push(episode);
-    //                 // novel.addEpisode(episode);
-    //                 // novel.episodes.push(pageObjs);
-    //                 // console.log("novel:");
-    //                 // console.log(novel);
-    //                 // return pageObjs;
-    //                 return episode;
-    //             })
-    //         // );
-    //         // resolve(episodes);
-    //         console.log("pageObjs");
-    //         console.log(pageObjs);
-    //     // novel.episodes.concat(episodes);
-    //     // resolve({ obj: novel, sum: pageSum });
-    // })};
-    //
-    // const getNovelObj = async(obj) => {
-    //     return await asyncReturn(obj);
-    // }
-
     useEffect(async() => {
         const novelObj = getNovels(novelId);
         const novel = new Novel(novelId, novelObj.title);
         let pageSum = 0;
-        let episodes = [];
         for(let i = 0; i < novelObj.list.length; i++){
             num++;
-            // console.log(novelObj.list);
             const array = novelObj.list[i].split("|");
             let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
             const pageObjs = await episode.getPages(novelObj.texts[num - 1]);
             pageSum += pageObjs.length;
-            // return episode;
-            // console.log("pageObj:");
-            // console.log(pageObj);
-            console.log("episode");
-            console.log(episode);
             novel.episodes.push(episode);
         }
-        // const episodes = novelObj.list.map(async(line) => {
-            // console.log("line:" + line);
-            // num++;
-            // const array = line.split("|");
-            // let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
-            // const pageObjs = await episode.getPages(novelObj.texts[num - 1]);
-            // pageSum += pageObjs.length;
-            // // return episode;
-            // // console.log("pageObj:");
-            // // console.log(pageObj);
-            // console.log("episode");
-            // console.log(episode);
-            // novel.episodes.push(episode);
-            // novel.addEpisode(episode);
-            // novel.episodes.push(pageObjs);
-            console.log("novel:");
-            console.log(novel);
-            // return pageObjs;
-            // return episode;
-        // })
-        // console.log("novelObj");
-        // console.log(novelObj);
-
-        // const lines = getNovels(2, 1).split("\n");
-        // console.log("await new Episode(1).getPages(lines)");
-        // console.log("num: " + num);
-        // const episode = await new Episode(1, title, fontSize, maxHeight, maxWidth).getPages(lines);
-        console.log("episodes:");
-        console.log(episodes);
-        // const novel = await getNovelObj();
-        // const pages = getAllEpisodesJsx(novel.obj);
-        // console.log("pages:");
-        // console.log(pages);
-        // console.log("novel");
-        // console.log(novel);
-        // console.log("novel.sum: " + novel.sum);
-        // setJsxPages(pages);
+        console.log("novel:");
+        console.log(novel);
         initMaxPage(pageSum);
     }, []);
 
@@ -174,10 +83,6 @@ export const Pages = (props) => {
     const fColor = props.fColor;
     const bgColor = props.bgColor;
     const xy = props.xy;
-
-    // const innerMargin = useMemo(() => {
-    //     return xy === "horizontal-tb" ? "0 auto 0 0" : "0 0 0 auto";
-    // }, [xy]);
 
     const outerStyle = {
         backgroundColor: bgColor,

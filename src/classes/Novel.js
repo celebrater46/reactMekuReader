@@ -4,8 +4,4 @@ export class Novel {
         this.title = title;
         this.episodes = [];
     }
-
-    addEpisode(ep) {
-        this.episodes.push(ep);
-}
 }
