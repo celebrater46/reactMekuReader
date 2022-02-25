@@ -57,7 +57,11 @@ export const Pages = (props) => {
         return novel.episodes.map((ep) => {
             epNum++;
             const pagesDivs = getEpisodeJsx(ep.pageObjs);
-            return { pagesDivs };
+            return (
+                <>
+                    { pagesDivs }
+                </>
+            );
         })
     }
 
@@ -69,13 +73,30 @@ export const Pages = (props) => {
             num++;
             const array = novelObj.list[i].split("|");
             let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
-            const pageObjs = await episode.getPages(novelObj.texts[num - 1]);
+            const lines = novelObj.texts[num - 1].split("\n");
+            const pageObjs = await episode.getPages(lines);
+            // console.log("pageObjs");
+            // console.log(pageObjs);
             pageSum += pageObjs.length;
             novel.episodes.push(episode);
         }
         console.log("novel:");
         console.log(novel);
         initMaxPage(pageSum);
+        // const episodesJsx = getEpisodeJsx(novel.episodes[1].pageObjs);
+        const episodesJsx = getAllEpisodesJsx(novel);
+        console.log("episodesJsx");
+        console.log(episodesJsx);
+        // getLinesJsx(novel.episodes.pageObjs)
+        // setJsxPages(getAllEpisodesJsx(novel));
+        // console.log("episodesJsx[0].pagesDivs");
+        // console.log(episodesJsx[0].pagesDivs);
+        setJsxPages(episodesJsx);
+        // setJsxPages(
+        //     <>
+        //         { episodesJsx[0].pagesDivs }
+        //     </>
+        // );
     }, []);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -128,9 +149,7 @@ export const Pages = (props) => {
 
     return (
         <>
-            <div style={linkStyle}>前のエピソードへ</div>
             { jsxPages }
-            <div style={linkStyle}>次のエピソードへ</div>
         </>
     );
 }
