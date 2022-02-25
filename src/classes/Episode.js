@@ -9,7 +9,7 @@ export class Episode {
         this.pageObjs = [];
         this.maxWidth = width;
         // this.maxHeight = height;
-        this.maxHeight = height * 0.8;
+        this.maxHeight = height;
         this.fontSize = font; // px
         this.rubyLineHeight = this.fontSize * 2; // px
         this.maxChars = Math.floor(this.maxWidth / this.fontSize);

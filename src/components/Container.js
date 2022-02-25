@@ -15,15 +15,15 @@ export const Container = () => {
     const [xy, setXy] = useState("vertical-rl");
     const [maxPage, setMaxPage] = useState(12);
 
-    const fontSizeNum = useMemo(() => {
-        switch (size){
-            case "small": return "14px";
-            case "middle": return "18px";
-            case "large": return "20px";
-            case "largest": return "24px";
-            default: return "16px";
-        }
-    }, [size]);
+    // const fontSizeNum = useMemo(() => {
+    //     switch (size){
+    //         case "small": return "14px";
+    //         case "middle": return "18px";
+    //         case "large": return "20px";
+    //         case "largest": return "24px";
+    //         default: return "16px";
+    //     }
+    // }, [size]);
     const fColor = useMemo(() => {
         switch (color){
             case "white": return "#333";
@@ -32,7 +32,8 @@ export const Container = () => {
             default: return "#333";
         }
     }, [color]);
-    const pageBgColor = useMemo(() => {
+    // const pageBgColor = useMemo(() => {
+    const bgColor = useMemo(() => {
         switch (color){
             case "white": return "white";
             case "black": return "#333";
@@ -40,14 +41,14 @@ export const Container = () => {
             default: return "white";
         }
     }, [color]);
-    const bgColor = useMemo(() => {
-        switch (color){
-            case "white": return "silver";
-            case "black": return "#000";
-            case "beige": return "#dcba99";
-            default: return "silver";
-        }
-    }, [color]);
+    // const bgColor = useMemo(() => {
+    //     switch (color){
+    //         case "white": return "silver";
+    //         case "black": return "#000";
+    //         case "beige": return "#dcba99";
+    //         default: return "silver";
+    //     }
+    // }, [color]);
     // const direction = useMemo(() => {
     //     console.log(xy === "horizontal-tb" ? "row" : "row-reverse");
     //     return xy === "horizontal-tb" ? "row" : "row-reverse";
@@ -81,7 +82,7 @@ export const Container = () => {
         margin: "0",
         padding: "3% 0",
         fontFamily: family,
-        fontSize: fontSizeNum,
+        // fontSize: fontSizeNum,
         display: "flex",
         // flexDirection: direction,
         flexDirection: "row-reverse",
@@ -119,8 +120,8 @@ export const Container = () => {
             />
             {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             <Pages
-                fColor={fColor}
-                bgColor={pageBgColor}
+                size={size}
+                color={color}
                 xy={xy}
                 novelId={novelId}
                 epId={epId}

@@ -7,6 +7,9 @@ import {Novel} from "../classes/Novel";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
+    const size = props.size;
+    const color = props.color;
+    const [pageBgColor, setPageBgColor] = useState("white");
     // const epId = props.epId;
     const [jsxPages, setJsxPages] = useState([<p>テスト</p>]);
     const fontSize = 20;
@@ -15,6 +18,42 @@ export const Pages = (props) => {
     const fontFamily = "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma";
     let pageNumSum = 0;
     let lineNumSum = 0;
+
+    const fontSizeNum = useMemo(() => {
+        switch (size){
+            case "small": return "14px";
+            case "middle": return "18px";
+            case "large": return "20px";
+            case "largest": return "24px";
+            default: return "16px";
+        }
+    }, [size]);
+    // const fColor = useMemo(() => {
+    //     switch (color){
+    //         case "white": return "#333";
+    //         case "black": return "silver";
+    //         case "beige": return "#443322";
+    //         default: return "#333";
+    //     }
+    // }, [color]);
+    // const pageBgColor = useMemo(() => {
+    //     console.log("color: " + color);
+    //     switch (color){
+    //         case "white": return "white";
+    //         case "black": return "#333";
+    //         case "beige": return "#fedcbb";
+    //         default: return "white";
+    //     }
+    // }, [color]);
+    useMemo(() => {
+        console.log("color: " + color);
+        switch (color){
+            case "white": setPageBgColor("white"); break;
+            case "black": setPageBgColor("#333"); break;
+            case "beige": setPageBgColor("#fedcbb"); break;
+            default: setPageBgColor("white");
+        }
+    }, [color]);
 
     const changePageNum = (e) => {
         const epNum = parseInt(e.target.id.substr(3));
@@ -144,6 +183,7 @@ export const Pages = (props) => {
     }
 
     useEffect(async() => {
+    // useMemo(async() => {
         const novelObj = getNovels(novelId);
         let novel = new Novel(novelId, novelObj.title);
         novel.getIndex(novelObj.list, fontSize, maxWidth, maxHeight);
@@ -165,23 +205,33 @@ export const Pages = (props) => {
         console.log(episodesJsx);
         setJsxPages(episodesJsx);
         initMaxPage(pageNumSum);
+    // }, [color]);
     }, []);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    const fColor = props.fColor;
-    const bgColor = props.bgColor;
+    // const fColor = props.fColor;
+    // const bgColor = props.bgColor;
     // const xy = props.xy;
 
     const outerStyle = {
-        backgroundColor: bgColor,
+        // backgroundColor: "black",
+        // backgroundColor: pageBgColor,
         flexBasis: "700px",
         margin: "20px " + ((windowWidth - maxWidth - 100) / 2) + "px",
         padding: "50px 0",
         display: "block",
     }
+    // const outerStyleColor = useMemo(() => {
+    //     console.log("pageBgColor");
+    //     console.log(pageBgColor);
+    //     return {
+    //         backgroundColor: pageBgColor,
+    //     };
+    //     // return newStyle;
+    // }, [pageBgColor]);
     const innerStyle = {
-        color: fColor,
+        // color: fColor,
         textAlign: "center",
         verticalAlign: "middle",
         width: maxWidth + 100 + "px",
@@ -191,10 +241,13 @@ export const Pages = (props) => {
         alignItems: "center",
         writingMode: "vertical-rl"
     };
+
     const innerStyle2 = {
+        // color: fColor,
         margin: "0 auto"
     }
     const innerStyle2Last = {
+        // color: fColor,
         margin: "0 40px 0 auto"
     }
     const pStyle = {
@@ -223,6 +276,11 @@ export const Pages = (props) => {
     //     color: fColor,
     //     writingMode: "vertical-rl"
     // }
+
+    useMemo(() => {
+        console.log("outerStyle");
+        console.log(outerStyle);
+    }, [pageBgColor]);
 
     window.addEventListener('resize', () => {
         console.log('resized window');
