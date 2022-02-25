@@ -8,7 +8,8 @@ export class Episode {
         this.lines = [];
         this.pageObjs = [];
         this.maxWidth = width;
-        this.maxHeight = height;
+        // this.maxHeight = height;
+        this.maxHeight = height * 0.8;
         this.fontSize = font; // px
         this.rubyLineHeight = this.fontSize * 2; // px
         this.maxChars = Math.floor(this.maxWidth / this.fontSize);
@@ -186,6 +187,7 @@ export class Episode {
     createPage(i, remainLines){
         return new Promise((resolve, reject) => {
             let page = new Page(i);
+            // page.lines.push(<h2>{ this.title }</h2>);
             let lines = remainLines;
             let finalLine = 0;
             let sumHeight = this.rubyLineHeight;

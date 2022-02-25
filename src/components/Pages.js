@@ -6,12 +6,13 @@ import {Novel} from "../classes/Novel";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
-    const epId = props.epId;
+    // const epId = props.epId;
     const [jsxPages, setJsxPages] = useState([<p>テスト</p>]);
     const fontSize = 20;
     const maxWidth = 600;
     const maxHeight = window.innerHeight * 0.8;
-    let num = 0;
+    const fontFamily = "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma";
+    let pageNumSum = 0;
 
     const initMaxPage = (num) => {
         return props.initMaxPage(num);
@@ -32,34 +33,62 @@ export const Pages = (props) => {
         });
     }
 
-    const getEpisodeJsx = (pages) => {
-        let pageNum = 0;
-        return pages.map((page) => {
-            pageNum++;
-            const linesP = getLinesJsx(page.lines);
-            return (
-                <div key={"outer-" + pageNum} style={outerStyle}>
-                    <div key={"inner-" + pageNum} style={innerStyle}>
-                        <div
-                            key={"inner2-" + pageNum}
-                            style={ pageNum === pages.length ? innerStyle2Last : innerStyle2 }
-                        >
-                            { linesP }
-                        </div>
+    const getPageJsx = (linesJsx, pageNum, isLast) => {
+        pageNumSum++;
+        return (
+            <div key={"outer-" + pageNumSum} style={outerStyle}>
+                <div key={"inner-" + pageNumSum} style={innerStyle}>
+                    <div
+                        key={"inner2-" + pageNumSum}
+                        style={ isLast ? innerStyle2Last : innerStyle2 }
+                    >
+                        { linesJsx }
                     </div>
                 </div>
+            </div>
+        );
+    }
+
+    const getEpisodeJsx = (ep) => {
+        let pageNum = 0;
+        // pageNumSum++; // for h2
+        const h2 = <h2 key={"title-" + ep.id} style={h2Style}>{ ep.title }</h2>;
+        return ep.pageObjs.map((page) => {
+            pageNum++;
+            const linesP = getLinesJsx(page.lines);
+            const isLast = pageNum === ep.pageObjs.length;
+            return (
+                <>
+                    { pageNum === 1 ? getPageJsx(h2, pageNum, isLast) : <></> }
+                    { getPageJsx(linesP, pageNum, isLast) }
+                </>
+                // <div key={"outer-" + pageNumSum} style={outerStyle}>
+                //     <div key={"inner-" + pageNumSum} style={innerStyle}>
+                //         <div
+                //             key={"inner2-" + pageNumSum}
+                //             style={ pageNum === ep.pageObjs.length ? innerStyle2Last : innerStyle2 }
+                //         >
+                //             { pageNum === 1 ? <h2 style={h2Style}>{ ep.title }</h2> : <>{ linesP }</> }
+                //             {/*{ linesP }*/}
+                //         </div>
+                //     </div>
+                // </div>
             );
         });
     }
 
     const getAllEpisodesJsx = (novel) => {
-        let epNum = 0;
+        // let epNum = 0;
+        const h1 = <h1 key={"novel_title"} style={h1Style}>{ novel.title }</h1>;
+        console.log("novel.title: " + novel.title);
+        console.log("pageNumSum: " + pageNumSum);
         return novel.episodes.map((ep) => {
-            epNum++;
-            const pagesDivs = getEpisodeJsx(ep.pageObjs);
+            // epNum++;
+            // const pagesDivs = getEpisodeJsx(ep);
             return (
                 <>
-                    { pagesDivs }
+                    { pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }
+                    { getEpisodeJsx(ep) }
                 </>
             );
         })
@@ -68,42 +97,27 @@ export const Pages = (props) => {
     useEffect(async() => {
         const novelObj = getNovels(novelId);
         const novel = new Novel(novelId, novelObj.title);
-        let pageSum = 0;
+        let pageSum = 1; // 1 for h1
+        let num = 0;
         for(let i = 0; i < novelObj.list.length; i++){
             num++;
             const array = novelObj.list[i].split("|");
             let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
             const lines = novelObj.texts[num - 1].split("\n");
             const pageObjs = await episode.getPages(lines);
-            // console.log("pageObjs");
-            // console.log(pageObjs);
-            pageSum += pageObjs.length;
+            pageSum += pageObjs.length + 1; // + 1 for h2
             novel.episodes.push(episode);
         }
-        console.log("novel:");
-        console.log(novel);
         initMaxPage(pageSum);
-        // const episodesJsx = getEpisodeJsx(novel.episodes[1].pageObjs);
         const episodesJsx = getAllEpisodesJsx(novel);
-        console.log("episodesJsx");
-        console.log(episodesJsx);
-        // getLinesJsx(novel.episodes.pageObjs)
-        // setJsxPages(getAllEpisodesJsx(novel));
-        // console.log("episodesJsx[0].pagesDivs");
-        // console.log(episodesJsx[0].pagesDivs);
         setJsxPages(episodesJsx);
-        // setJsxPages(
-        //     <>
-        //         { episodesJsx[0].pagesDivs }
-        //     </>
-        // );
     }, []);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const fColor = props.fColor;
     const bgColor = props.bgColor;
-    const xy = props.xy;
+    // const xy = props.xy;
 
     const outerStyle = {
         backgroundColor: bgColor,
@@ -134,13 +148,27 @@ export const Pages = (props) => {
         padding: "0",
         lineHeight: "200%",
         fontSize: fontSize + "px",
-        fontFamily: "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma",
+        fontFamily: fontFamily,
         textAlign: "left"
     }
-    const linkStyle = {
-        color: fColor,
-        writingMode: "vertical-rl"
+    const h1Style = {
+        margin: "0",
+        padding: "0",
+        fontSize: fontSize * 1.8 + "px",
+        fontFamily: fontFamily,
+        textAlign: "left"
     }
+    const h2Style = {
+        margin: "0",
+        padding: "0",
+        fontSize: fontSize * 1.3 + "px",
+        fontFamily: fontFamily,
+        textAlign: "left"
+    }
+    // const linkStyle = {
+    //     color: fColor,
+    //     writingMode: "vertical-rl"
+    // }
 
     window.addEventListener('resize', () => {
         console.log('resized window');
