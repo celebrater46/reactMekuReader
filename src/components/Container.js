@@ -70,7 +70,7 @@ export const Container = () => {
     const initMaxPage = (num) => {
         setMaxPage(num);
     }
-    const onChangeSlider = (num) => {
+    const changePageNum = (num) => {
         setCurrentPage(num);
     }
     const div = {
@@ -110,12 +110,12 @@ export const Container = () => {
                 xy={xy}
                 maxPage={maxPage}
                 currentPage={currentPage}
-                onChangeSlider={(num) => onChangeSlider(num)}
+                changePageNum={(num) => changePageNum(num)}
             />
             <Slider
                 maxPage={maxPage}
                 currentPage={currentPage}
-                onChangeSlider={(num) => onChangeSlider(num)}
+                changePageNum={(num) => changePageNum(num)}
             />
             {/*<HiddenButton xy={xy} type={"bottom"} width={"96vw"} height={"18vh"} right={"2vw"} bottom={"2vh"}/>*/}
             <Pages
@@ -126,6 +126,7 @@ export const Container = () => {
                 epId={epId}
                 currentPage={currentPage}
                 initMaxPage={(num) => initMaxPage(num)}
+                changePageNum={(num) => changePageNum(num)}
             />
             <ControlPanel
                 family={family}

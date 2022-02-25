@@ -19,14 +19,14 @@ export const MovePageButton = (props) => {
     const rightStyle = {
         right: "2vw",
     }
-    // const onChangeSlider = (e) => {
-    //     return props.onChangeSlider(maxPage - e.target.value + 1);
+    // const changePageNum = (e) => {
+    //     return props.changePageNum(maxPage - e.target.value + 1);
     // }
     const clickLeft = () => {
         console.log("clicked right");
         console.log("currentPage: " + currentPage);
         console.log("maxPage: " + maxPage);
-        return props.onChangeSlider(currentPage < maxPage ? currentPage + 1 : currentPage);
+        return props.changePageNum(currentPage < maxPage ? currentPage + 1 : currentPage);
         // setCurrentPage(currentPage < maxPage ? currentPage + 1 : currentPage);
     }
 
@@ -34,7 +34,7 @@ export const MovePageButton = (props) => {
         console.log("clicked left");
         console.log("currentPage: " + currentPage);
         console.log("maxPage: " + maxPage);
-        return props.onChangeSlider(currentPage > 1 ? currentPage - 1 : currentPage);
+        return props.changePageNum(currentPage > 1 ? currentPage - 1 : currentPage);
         // setCurrentPage(currentPage > 1 ? currentPage - 1 : currentPage);
     }
     const getLocation = () => {

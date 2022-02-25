@@ -45,8 +45,8 @@ export const Slider = (props) => {
     const toggleSlider = () => {
         setY(y === "0" ? "-30vh" : "0");
     }
-    const onChangeSlider = (e) => {
-        return props.onChangeSlider(e.target.value);
+    const changePageNum = (e) => {
+        return props.changePageNum(e.target.value);
     }
 
     return (
@@ -62,7 +62,7 @@ export const Slider = (props) => {
                     max={ maxPage }
                     style={sliderStyle}
                     value={currentPage}
-                    onChange={onChangeSlider}
+                    onChange={changePageNum}
                 />
             </div>
         </>

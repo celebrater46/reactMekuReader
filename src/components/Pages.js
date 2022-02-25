@@ -3,6 +3,7 @@ import {getNovels} from "../novels/novelController";
 import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
 import {Episode} from "../classes/Episode";
 import {Novel} from "../classes/Novel";
+// import {Index} from "../classes";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
@@ -13,25 +14,47 @@ export const Pages = (props) => {
     const maxHeight = window.innerHeight * 0.8;
     const fontFamily = "Noto Serif JP, Kosugi, Hiragino Kaku Gothic ProN W3, Helvetica, Meiryo, Tahoma";
     let pageNumSum = 0;
+    let lineNumSum = 0;
+
+    const changePageNum = (e) => {
+        const epNum = parseInt(e.target.id.substr(3));
+        return props.changePageNum(epNum);
+    }
 
     const initMaxPage = (num) => {
         return props.initMaxPage(num);
     }
 
     const getLinesJsx = (lines) => {
-        let lineNum = 0;
+        // let lineNum = 0;
         return lines.map((line) => {
-            lineNum++;
+            lineNumSum++;
             return (
                 <p
-                    key={"line-" + lineNum}
-                    id={"line-" + lineNum}
+                    key={"line-" + lineNumSum}
+                    id={"line-" + lineNumSum}
                     style={pStyle}
                 >
                     { encodeJsxRuby(line) }
                 </p>);
         });
     }
+
+    const getIndexLinesJsx = (lines) => {
+        return lines.map((line) => {
+            lineNumSum++;
+            return (
+                <p
+                    key={"line-" + lineNumSum}
+                    id={"line-" + lineNumSum}
+                    style={pStyle}
+                    onClick={changePageNum}
+                >
+                    { encodeJsxRuby(line) }
+                </p>);
+        });
+    }
+
 
     const getPageJsx = (linesJsx, pageNum, isLast) => {
         pageNumSum++;
@@ -47,6 +70,28 @@ export const Pages = (props) => {
                 </div>
             </div>
         );
+    }
+
+    const getIndexJsx = (novel) => {
+        let i = 0;
+        return novel.index.pages.map((page) => {
+            const jsxLines = getIndexLinesJsx(page.lines);
+            // console.log("jsxLines");
+            // console.log(jsxLines);
+            // console.log("getPageJsx(jsxLines)");
+            // console.log(getPageJsx(jsxLines));
+            return getPageJsx(jsxLines);
+            // return (
+            //     <p
+            //         key={"ep-" + i}
+            //         id={"sp-" + ep.startPage}
+            //         style={pStyle}
+            //         onClick={changePageNum}
+            //     >
+            //         { ep.title }
+            //     </p>
+            // );
+        })
     }
 
     const getEpisodeJsx = (ep) => {
@@ -80,6 +125,9 @@ export const Pages = (props) => {
     const getAllEpisodesJsx = (novel) => {
         // let epNum = 0;
         const h1 = <h1 key={"novel_title"} style={h1Style}>{ novel.title }</h1>;
+        // const index = new Index(fontSize, maxWidth, maxHeight).separateList(novel);
+        // const index = getIndexJsx(novel);
+        // const indexJsx = getPageJsx(index, 1, false);
         console.log("novel.title: " + novel.title);
         console.log("pageNumSum: " + pageNumSum);
         return novel.episodes.map((ep) => {
@@ -88,6 +136,7 @@ export const Pages = (props) => {
             return (
                 <>
                     { pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }
+                    { pageNumSum === 1 ? getIndexJsx(novel) : <></> }
                     { getEpisodeJsx(ep) }
                 </>
             );
@@ -96,7 +145,10 @@ export const Pages = (props) => {
 
     useEffect(async() => {
         const novelObj = getNovels(novelId);
-        const novel = new Novel(novelId, novelObj.title);
+        let novel = new Novel(novelId, novelObj.title);
+        novel.getIndex(novelObj.list, fontSize, maxWidth, maxHeight);
+        // console.log("index");
+        // console.log(novel.index);
         let pageSum = 1; // 1 for h1
         let num = 0;
         for(let i = 0; i < novelObj.list.length; i++){
@@ -108,9 +160,11 @@ export const Pages = (props) => {
             pageSum += pageObjs.length + 1; // + 1 for h2
             novel.episodes.push(episode);
         }
-        initMaxPage(pageSum);
         const episodesJsx = getAllEpisodesJsx(novel);
+        console.log("episodesJsx");
+        console.log(episodesJsx);
         setJsxPages(episodesJsx);
+        initMaxPage(pageNumSum);
     }, []);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
