@@ -9,7 +9,7 @@ import {EpisodeJsx} from "./EpisodeJsx";
 
 export const Pages = (props) => {
     const novelId = props.novelId;
-    const novel = getNovelObj();
+    // const novel = getNovelObj();
     const size = props.size;
     const color = props.color;
     const [pageBgColor, setPageBgColor] = useState("white");
@@ -73,6 +73,8 @@ export const Pages = (props) => {
         return novel;
     }
 
+    // const novel = getNovelObj();
+
     // const h1Style = {
     //     margin: "0",
     //     padding: "0",
@@ -93,9 +95,14 @@ export const Pages = (props) => {
 
     return (
         <>
-            {(() => {
+            {/*{(() => {*/}
+            {(async () => {
+                const novel = await getNovelObj();
+                console.log("novel");
+                console.log(novel);
                 // let epNum = 0;
                 return novel.episodes.map((ep) => {
+                    // return getNovelObj().episodes.map((ep) => {
                     // pageNumSum++;
                     // epNum++;
                     return (
@@ -112,13 +119,13 @@ export const Pages = (props) => {
                             {/*/>*/}
                             <EpisodeJsx
                                 // id={epNum}
-                                title={novel.title}
+                                title={"novel.title"}
                                 ep={ep}
                                 fColor={props.fColor}
                             />
                         </>
                     );
-                })
+                });
             })()}
         </>
     );
