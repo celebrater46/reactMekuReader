@@ -7,9 +7,9 @@ import {Slider} from "./Slider";
 
 export const Container = () => {
     const [novelId, setNovelId] = useState(1);
-    const [epId, setEpId] = useState(0);
+    // const [epId, setEpId] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [family, setFamily] = useState('Noto Serif JP');
+    const [family, setFamily] = useState('mincho');
     const [size, setSize] = useState("middle");
     const [color, setColor] = useState("white");
     const [xy, setXy] = useState("vertical-rl");
@@ -41,6 +41,13 @@ export const Container = () => {
             default: return "white";
         }
     }, [color]);
+    const fontName = useMemo(() => {
+        if(family === "mincho"){
+            return "Noto Serif JP";
+        } else {
+            return "Kosugi";
+        }
+    }, [family]);
     // const bgColor = useMemo(() => {
     //     switch (color){
     //         case "white": return "silver";
@@ -81,7 +88,7 @@ export const Container = () => {
         height: "94%",
         margin: "0",
         padding: "3% 0",
-        fontFamily: family,
+        fontFamily: fontName,
         // fontSize: fontSizeNum,
         display: "flex",
         // flexDirection: direction,
@@ -122,9 +129,11 @@ export const Container = () => {
             <Pages
                 size={size}
                 color={color}
+                fColor={fColor}
                 xy={xy}
                 novelId={novelId}
-                epId={epId}
+                // epId={epId}
+                fontName={fontName}
                 currentPage={currentPage}
                 initMaxPage={(num) => initMaxPage(num)}
                 changePageNum={(num) => changePageNum(num)}

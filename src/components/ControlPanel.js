@@ -75,8 +75,8 @@ export const ControlPanel = (props) => {
                     <div style={boxStyle}>
                         <label htmlFor="font_family" style={labelStyle}>文字の種類</label>
                         <select name="font_family" style={selectStyle} onChange={changeFamily} value={props.family}>
-                            <option value={"Kosugi"}>ゴシック</option>
-                            <option value={"Noto Serif JP"}>明朝</option>
+                            <option value={"gothic"}>ゴシック</option>
+                            <option value={"mincho"}>明朝</option>
                         </select>
                     </div>
 
