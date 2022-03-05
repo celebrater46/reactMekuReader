@@ -7,7 +7,33 @@ import {EpisodeJsx} from "./EpisodeJsx";
 // import {PageJsx} from "./PageJsx";
 // import {Index} from "../classes";
 
-export const Pages = (props) => {
+// const getNovelPromise = async() => {
+//     return new Promise((resolve, reject)=> {
+//         resolve(obj);
+//     });
+// }
+
+// const getNovelObj = async(novelId, fontSize, maxWidth, maxHeight) => {
+//     // const novelObj = getNovels(novelId);
+//     // let novel = new Novel(novelId, novelObj.title);
+//     // novel.getIndex(novelObj.list, fontSize, maxWidth, maxHeight);
+//     // // let pageSum = 1; // 1 for h1
+//     // let num = 0;
+//     // for(let i = 0; i < novelObj.list.length; i++){
+//     //     num++;
+//     //     const array = novelObj.list[i].split("|");
+//     //     let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
+//     //     const lines = novelObj.texts[num - 1].split("\n");
+//     //     await episode.getPages(lines);
+//     //     // const pageObjs = await episode.getPages(lines);
+//     //     // pageSum += pageObjs.length + 1; // + 1 for h2
+//     //     novel.episodes.push(episode);
+//     // }
+//     // initMaxPage(novel);
+//     return novel;
+// }
+
+export const Pages = async (props) => {
     const novelId = props.novelId;
     // const novel = getNovelObj();
     const size = props.size;
@@ -53,6 +79,28 @@ export const Pages = (props) => {
         return props.initMaxPage(pages);
     }
 
+    // const getNovelPromise = () => {
+    //     return new Promise((resolve, reject)=> {
+    //         const novelObj = getNovels(novelId);
+    //         let novel = new Novel(novelId, novelObj.title);
+    //         novel.getIndex(novelObj.list, fontSize, maxWidth, maxHeight);
+    //         // let pageSum = 1; // 1 for h1
+    //         let num = 0;
+    //         for(let i = 0; i < novelObj.list.length; i++){
+    //             num++;
+    //             const array = novelObj.list[i].split("|");
+    //             let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
+    //             const lines = novelObj.texts[num - 1].split("\n");
+    //             await episode.getPages(lines);
+    //             // const pageObjs = await episode.getPages(lines);
+    //             // pageSum += pageObjs.length + 1; // + 1 for h2
+    //             novel.episodes.push(episode);
+    //         }
+    //         initMaxPage(novel);
+    //         resolve(obj);
+    //     });
+    // }
+
     const getNovelObj = async() => {
         const novelObj = getNovels(novelId);
         let novel = new Novel(novelId, novelObj.title);
@@ -73,7 +121,9 @@ export const Pages = (props) => {
         return novel;
     }
 
-    const novel = getNovelObj();
+    const novel = await getNovelObj();
+    // const novel = await getNovelObj(novelId, fontSize, maxWidth, maxHeight);
+    // setNovel(getNovelObj());
 
     // const h1Style = {
     //     margin: "0",
@@ -96,38 +146,40 @@ export const Pages = (props) => {
     return (
         <>
             {/*{(() => {*/}
-            {(async () => {
-                const novel = await getNovelObj();
+            {(() => {
+                // const novel = await getNovelObj();
                 console.log("novel");
                 console.log(novel);
                 // let epNum = 0;
-                let jsxArray = [];
-                return novel.episodes.map((ep) => {
-                    // return getNovelObj().episodes.map((ep) => {
-                    // pageNumSum++;
-                    // epNum++;
-                    jsxArray.push();
-                    return (
-                        <>
-                            {/*{ pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }*/}
-                            {/*{ pageNumSum === 1 ? getIndexJsx(novel) : <></> }*/}
-                            {/*{ getEpisodeJsx(ep) }*/}
-                            {/*<PageJsx*/}
-                            {/*    pageNum={pageNumSum}*/}
-                            {/*    maxWidth={maxWidth}*/}
-                            {/*    maxHeight={maxHeight}*/}
-                            {/*    fColor={props.fColor}*/}
-                            {/*    isLast={false}*/}
-                            {/*/>*/}
-                            <EpisodeJsx
-                                // id={epNum}
-                                title={"novel.title"}
-                                ep={ep}
-                                fColor={props.fColor}
-                            />
-                        </>
-                    );
-                });
+                // let jsxArray = [];
+                if(novel !== undefined){
+                    return novel.episodes.map((ep) => {
+                        // return getNovelObj().episodes.map((ep) => {
+                        // pageNumSum++;
+                        // epNum++;
+                        // jsxArray.push();
+                        return (
+                            <>
+                                {/*{ pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }*/}
+                                {/*{ pageNumSum === 1 ? getIndexJsx(novel) : <></> }*/}
+                                {/*{ getEpisodeJsx(ep) }*/}
+                                {/*<PageJsx*/}
+                                {/*    pageNum={pageNumSum}*/}
+                                {/*    maxWidth={maxWidth}*/}
+                                {/*    maxHeight={maxHeight}*/}
+                                {/*    fColor={props.fColor}*/}
+                                {/*    isLast={false}*/}
+                                {/*/>*/}
+                                <EpisodeJsx
+                                    // id={epNum}
+                                    title={"novel.title"}
+                                    ep={ep}
+                                    fColor={props.fColor}
+                                />
+                            </>
+                        );
+                    });
+                }
             })()}
         </>
     );

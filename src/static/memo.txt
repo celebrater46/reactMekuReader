@@ -95,3 +95,26 @@ return ひとつにつき、一番親のタグが複数あるというエラー�
 配列化して { hogeArray } などと書き換えても同様のエラー。
 原因は今のところ不明。
 
+
+
+$#########$#########$#########$#########$#########
+220306
+
+違った。エラーの全文を見ると、子要素にPromiseが来てるのが原因とわかる。
+Uncaught Error: Objects are not valid as a React child (found: [object Promise]).
+If you meant to render a collection of children, use an array instead.
+
+解決策は Promise オブジェクトの代わりに配列を使え、としている。
+
+novel オブジェクトを useState にして、一度レンダーが動いた後に再度発火するようにしたが失敗。
+novel が undefined となったまま、二度目の発火がない。
+
+コンポーネント全体を Promise 化し、
+getNovelObj() を await 化して待機させるよう試みたが、
+同じエラーを吐き続ける。
+
+また、getNovelObj() をコンポーネントの外に移すよう試みるも、
+Promise 関数の中に await を仕込むことはできない仕様らしく、失敗。
+
+短期解決は不可能と判断。
+開発は無期限保留とする。
