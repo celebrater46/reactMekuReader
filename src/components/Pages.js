@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {getNovels} from "../novels/novelController";
 // import {encodeJsxRuby, encodeRuby} from "../modules/encoder";
 import {Episode} from "../classes/Episode";
@@ -15,7 +15,6 @@ export const Pages = (props) => {
     const [pageBgColor, setPageBgColor] = useState("white");
     // const epId = props.epId;
     // const [jsxPages, setJsxPages] = useState([<p>テスト</p>]);
-    const [eps, setEps] = useState([]);
     const fontSize = 20;
     const maxWidth = 600;
     const maxHeight = window.innerHeight * 0.8;
@@ -54,14 +53,13 @@ export const Pages = (props) => {
         return props.initMaxPage(pages);
     }
 
-    // const getNovelObj = async() => {
-    useEffect(async() => {
+    const getNovelObj = async() => {
         const novelObj = getNovels(novelId);
         let novel = new Novel(novelId, novelObj.title);
         novel.getIndex(novelObj.list, fontSize, maxWidth, maxHeight);
         // let pageSum = 1; // 1 for h1
         let num = 0;
-        for (let i = 0; i < novelObj.list.length; i++) {
+        for(let i = 0; i < novelObj.list.length; i++){
             num++;
             const array = novelObj.list[i].split("|");
             let episode = new Episode(num, array[2], fontSize, maxHeight, maxWidth);
@@ -72,25 +70,10 @@ export const Pages = (props) => {
             novel.episodes.push(episode);
         }
         initMaxPage(novel);
-        let array = [];
-        novel.episodes.map((ep) => {
-            array.push(
-                <EpisodeJsx
-                    // id={epNum}
-                    title={"novel.title"}
-                    ep={ep}
-                    fColor={props.fColor}
-                />
-            );
-        });
-        setEps(array);
-        console.log("array");
-        console.log(array);
-        // return novel;
-        // }
-    }, []);
+        return novel;
+    }
 
-    // const novel = getNovelObj();
+    const novel = getNovelObj();
 
     // const h1Style = {
     //     margin: "0",
@@ -99,23 +82,6 @@ export const Pages = (props) => {
     //     // fontFamily: fontFamily,
     //     textAlign: "left"
     // }
-
-    // useMemo(() => {
-    //     let array = [];
-    //     console.log("novel");
-    //     console.log(novel);
-    //     novel.episodes.map((ep) => {
-    //         array.push(
-    //             <EpisodeJsx
-    //                 // id={epNum}
-    //                 title={"novel.title"}
-    //                 ep={ep}
-    //                 fColor={props.fColor}
-    //             />
-    //         );
-    //     });
-    //     setEps(array);
-    // }, [novel]);
 
     useMemo(() => {
         // console.log("outerStyle");
@@ -129,41 +95,40 @@ export const Pages = (props) => {
 
     return (
         <>
-            { eps }
             {/*{(() => {*/}
-            {/*{(async () => {*/}
-            {/*    const novel = await getNovelObj();*/}
-            {/*    console.log("novel");*/}
-            {/*    console.log(novel);*/}
-            {/*    // let epNum = 0;*/}
-            {/*    let jsxArray = [];*/}
-            {/*    return novel.episodes.map((ep) => {*/}
-            {/*        // return getNovelObj().episodes.map((ep) => {*/}
-            {/*        // pageNumSum++;*/}
-            {/*        // epNum++;*/}
-            {/*        jsxArray.push();*/}
-            {/*        return (*/}
-            {/*            <>*/}
-            {/*                /!*{ pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }*!/*/}
-            {/*                /!*{ pageNumSum === 1 ? getIndexJsx(novel) : <></> }*!/*/}
-            {/*                /!*{ getEpisodeJsx(ep) }*!/*/}
-            {/*                /!*<PageJsx*!/*/}
-            {/*                /!*    pageNum={pageNumSum}*!/*/}
-            {/*                /!*    maxWidth={maxWidth}*!/*/}
-            {/*                /!*    maxHeight={maxHeight}*!/*/}
-            {/*                /!*    fColor={props.fColor}*!/*/}
-            {/*                /!*    isLast={false}*!/*/}
-            {/*                />}
-            {/*                <EpisodeJsx*/}
-            {/*                    // id={epNum}*/}
-            {/*                    title={"novel.title"}*/}
-            {/*                    ep={ep}*/}
-            {/*                    fColor={props.fColor}*/}
-            {/*                />*/}
-            {/*            </>*/}
-            {/*        );*/}
-            {/*    });*/}
-            {/*})()}*/}
+            {(async () => {
+                const novel = await getNovelObj();
+                console.log("novel");
+                console.log(novel);
+                // let epNum = 0;
+                let jsxArray = [];
+                return novel.episodes.map((ep) => {
+                    // return getNovelObj().episodes.map((ep) => {
+                    // pageNumSum++;
+                    // epNum++;
+                    jsxArray.push();
+                    return (
+                        <>
+                            {/*{ pageNumSum === 0 ? getPageJsx(h1, 0, false) : <></> }*/}
+                            {/*{ pageNumSum === 1 ? getIndexJsx(novel) : <></> }*/}
+                            {/*{ getEpisodeJsx(ep) }*/}
+                            {/*<PageJsx*/}
+                            {/*    pageNum={pageNumSum}*/}
+                            {/*    maxWidth={maxWidth}*/}
+                            {/*    maxHeight={maxHeight}*/}
+                            {/*    fColor={props.fColor}*/}
+                            {/*    isLast={false}*/}
+                            {/*/>*/}
+                            <EpisodeJsx
+                                // id={epNum}
+                                title={"novel.title"}
+                                ep={ep}
+                                fColor={props.fColor}
+                            />
+                        </>
+                    );
+                });
+            })()}
         </>
     );
 }
